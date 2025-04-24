@@ -1,0 +1,107 @@
+{% extends "base.html" %}  <!-- 继承自 base.html 模板 -->
+
+{% block title %}凉心智慧停车系统 - 招商合作{% endblock %}  <!-- 覆盖标题块 -->
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="/static/css/business_cooperation.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/home.css">
+    <style>
+
+    </style>
+{% endblock %}  <!-- 添加额外的 CSS -->
+
+{% block content %}
+    <!-- 内容区域 -->
+    <div class="container">
+        <!-- 招商合作介绍 -->
+        <section id="introduction">
+            <h2>招商合作</h2>
+            <p>凉心智慧停车系统，致力于为合作伙伴提供高效、智能的停车解决方案。我们诚邀各界合作伙伴加入，共同推动智慧城市建设，实现互利共赢。</p>
+        </section>
+
+        <!-- 合作优势 -->
+        <section id="advantages">
+            <h2>合作优势</h2>
+            <div class="advantage-cards">
+                <div class="advantage-card">
+                    <i class="fas fa-cogs"></i>
+                    <h3>先进技术</h3>
+                    <p>基于物联网和人工智能技术，提供高效、智能的停车管理系统。</p>
+                </div>
+                <div class="advantage-card">
+                    <i class="fas fa-handshake"></i>
+                    <h3>灵活合作</h3>
+                    <p>支持多种合作模式，满足不同客户需求。</p>
+                </div>
+                <div class="advantage-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>高回报率</h3>
+                    <p>通过智能化管理，显著提升停车场的运营效率和收益。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 采购流程 -->
+        <section id="process">
+            <h2>采购流程</h2>
+            <div class="process-steps">
+                <div class="process-step">
+                    <i class="fas fa-phone"></i>
+                    <h3>咨询洽谈</h3>
+                    <p>联系我们，了解产品详情和合作方案。</p>
+                </div>
+                <div class="process-step">
+                    <i class="fas fa-file-contract"></i>
+                    <h3>签订合同</h3>
+                    <p>确定合作细节，签订正式合同。</p>
+                </div>
+                <div class="process-step">
+                    <i class="fas fa-tools"></i>
+                    <h3>系统部署</h3>
+                    <p>专业团队为您安装和调试系统。</p>
+                </div>
+                <div class="process-step">
+                    <i class="fas fa-headset"></i>
+                    <h3>售后服务</h3>
+                    <p>提供7x24小时技术支持，确保系统稳定运行。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 合作案例 -->
+        <section id="cases">
+            <h2>合作案例</h2>
+            <div class="case-cards">
+                <div class="case-card">
+                    <img src="/static/img/man.jpg" alt="案例1">
+                    <h3>凉心商业综合体</h3>
+                    <p>通过智慧停车系统，停车效率提升30%，用户满意度显著提高。</p>
+                </div>
+                <div class="case-card">
+                    <img src="/static/img/man2.jpg" alt="案例2">
+                    <h3>凉心机场</h3>
+                    <p>高峰期拥堵减少40%，运营成本降低20%。</p>
+                </div>
+                <div class="case-card">
+                    <img src="/static/img/man1.jpg" alt="案例3">
+                    <h3>凉心住宅小区</h3>
+                    <p>车位利用率提高50%，业主收入增加15%。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系我们 -->
+        <section id="contact">
+            <h2>立即联系我们</h2>
+            <p>如果您对我们的智慧停车系统感兴趣，欢迎随时联系我们，获取更多合作信息。</p>
+            <a href="/contact/" class="cta-button">联系我们</a>
+        </section>
+    </div>
+
+    <!-- 回到顶部按钮 -->
+    <button id="back-to-top" title="回到顶部">↑</button>
+{% endblock %}  <!-- 覆盖内容块 -->
+
+{% block extra_js %}
+ <script src="/static/js/business_cooperation.js"></script>
+{% endblock %}  <!-- 添加额外的 JavaScript -->

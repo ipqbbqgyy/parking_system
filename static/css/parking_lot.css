@@ -1,0 +1,256 @@
+    /* 设置页面的最小宽度 */
+    body {
+        margin: 0;
+        padding: 0;
+        min-width: 1200px;  /* 设置最小宽度为 1200px，根据需要调整 */
+        min-height: 100%;
+    }
+
+    .bob {
+        position: relative;
+        text-align: center;
+    }
+
+    /* 容器样式 */
+    .container {
+        position: relative;
+        overflow-x: auto; /* 如果内容超出宽度，显示水平滚动条 */
+        width: 90%;
+        margin: 20px auto 20px; /* 调整顶部边距为 120px，避免被导航栏遮挡 */
+        padding: 20px;
+        background-color: #fff;
+    }
+
+    h1 {
+        text-align: center;
+        color: #6a11cb;
+        margin-bottom: 20px;
+    }
+
+    /* 停车场布局图 */
+    .parking-layout {
+        position: relative; /* 相对定位，作为停车位格子的参考容器 */
+        background-image: url('/static/img/停车场概图.png'); /* 背景图片路径 */
+        background-size: 1000px 1000px; /* 背景图片大小 */
+        background-position: center; /* 背景图片居中 */
+        background-repeat: no-repeat; /* 防止背景图片重复 */
+        padding: 20px; /* 内边距 */
+        border-radius: 10px; /* 圆角边框 */
+        min-height: 800px; /* 设置最小高度以确保背景图片显示完整 */
+        width: 1000px; /* 宽度与背景图片一致 */
+        height: 1000px; /* 高度与背景图片一致 */
+        margin: 0 auto; /* 居中 */
+    }
+
+    /* 停车位格子样式 */
+    .parking-layout .spot {
+        position: absolute; /* 绝对定位，相对于 .parking-layout */
+        padding: 10px; /* 调整内边距，使格子更小 */
+        text-align: center;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        font-size: 13px; /* 调整文字大小 */
+        min-height: 40px; /* 设置最小高度 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.8); /* 半透明背景，确保文字清晰 */
+    }
+
+    /* 占用车位 - 红色 */
+    .parking-layout .spot.occupied {
+        background-color: rgba(255, 107, 107, 0.8); /* 半透明红色 */
+        color: #fff;
+    }
+
+    /* 预留车位 - 橙色 */
+    .parking-layout .spot.reserved {
+        background-color: rgba(255, 167, 38, 0.8); /* 半透明橙色 */
+        color: #fff;
+    }
+
+    /* 可用车位 - 绿色 */
+    .parking-layout .spot.available {
+        background-color: rgba(102, 187, 106, 0.8); /* 半透明绿色 */
+        color: #fff;
+        cursor: pointer; /* 添加鼠标指针样式 */
+    }
+
+    /* 停车位格子尺寸 */
+    .parking-layout .spot.S {
+        width: 75px;
+        height: 40px;
+    }
+
+
+    /* 停车位格子位置 */
+    .parking-layout .spot.A1 { top: 55px; left: 70px; }
+    .parking-layout .spot.A2 { top: 100px; left: 70px; }
+    .parking-layout .spot.A3 { top: 145px; left: 70px; }
+    .parking-layout .spot.A4 { top: 220px; left: 70px; }
+    .parking-layout .spot.A5 { top: 265px; left: 70px; }
+    .parking-layout .spot.A6 { top: 310px; left: 70px; }
+    .parking-layout .spot.A7 { top: 385px; left: 19px; }
+    .parking-layout .spot.A8 { top: 431px; left: 19px; }
+    .parking-layout .spot.A9 { top: 475px; left: 20px; }
+    .parking-layout .spot.A10 { top: 550px; left: 18px; }
+    .parking-layout .spot.A11 { top: 595px; left: 18px; }
+    .parking-layout .spot.A12 { top: 640px; left: 18px; }
+    .parking-layout .spot.A13 { top: 711px; left: 19px; }
+    .parking-layout .spot.A14 { top: 757px; left: 19px; }
+    .parking-layout .spot.A15 { top: 802px; left: 20px; }
+
+    .parking-layout .spot.B1 { top: 55px; left: 280px; }
+    .parking-layout .spot.B2 { top: 100px; left: 280px; }
+    .parking-layout .spot.B3 { top: 145px; left: 280px; }
+    .parking-layout .spot.B4 { top: 220px; left: 280px; }
+    .parking-layout .spot.B5 { top: 265px; left: 280px; }
+    .parking-layout .spot.B6 { top: 310px; left: 280px; }
+    .parking-layout .spot.B7 { top: 385px; left: 280px; }
+    .parking-layout .spot.B8 { top: 431px; left: 280px; }
+    .parking-layout .spot.B9 { top: 475px; left: 280px; }
+    .parking-layout .spot.B10 { top: 550px; left: 280px; }
+    .parking-layout .spot.B11 { top: 595px; left: 280px; }
+    .parking-layout .spot.B12 { top: 640px; left: 280px; }
+    .parking-layout .spot.B13 { top: 56px; left: 362px; }
+    .parking-layout .spot.B14 { top: 102px; left: 362px; }
+    .parking-layout .spot.B15 { top: 148px; left: 362px; }
+    .parking-layout .spot.B16 { top: 222px; left: 362px; }
+    .parking-layout .spot.B17 { top: 267px; left: 362px; }
+    .parking-layout .spot.B18 { top: 312px; left: 362px; }
+    .parking-layout .spot.B19 { top: 387px; left: 362px; }
+    .parking-layout .spot.B20 { top: 432px; left: 362px; }
+    .parking-layout .spot.B21 { top: 477px; left: 362px; }
+    .parking-layout .spot.B22 { top: 551px; left: 362px; }
+    .parking-layout .spot.B23 { top: 597px; left: 362px; }
+    .parking-layout .spot.B24 { top: 642px; left: 362px; }
+
+
+    .parking-layout .spot.C1 { top: 39px; left: 634px; }
+    .parking-layout .spot.C2 { top: 100px; left: 565px; }
+    .parking-layout .spot.C3 { top: 145px; left: 565px; }
+    .parking-layout .spot.C4 { top: 220px; left: 565px; }
+    .parking-layout .spot.C5 { top: 265px; left: 565px; }
+    .parking-layout .spot.C6 { top: 310px; left: 565px; }
+    .parking-layout .spot.C7 { top: 385px; left: 565px; }
+    .parking-layout .spot.C8 { top: 431px; left: 565px; }
+    .parking-layout .spot.C9 { top: 475px; left: 565px; }
+    .parking-layout .spot.C10 { top: 550px; left: 565px; }
+    .parking-layout .spot.C11 { top: 595px; left: 565px; }
+    .parking-layout .spot.C12 { top: 640px; left: 565px; }
+    .parking-layout .spot.C13 { top: 102px; left: 649px; }
+    .parking-layout .spot.C14 { top: 148px; left: 649px; }
+    .parking-layout .spot.C15 { top: 222px; left: 649px; }
+    .parking-layout .spot.C16 { top: 267px; left: 649px; }
+    .parking-layout .spot.C17 { top: 312px; left: 649px; }
+    .parking-layout .spot.C18 { top: 387px; left: 649px; }
+    .parking-layout .spot.C19 { top: 432px; left: 649px; }
+    .parking-layout .spot.C20 { top: 477px; left: 649px; }
+    .parking-layout .spot.C21 { top: 551px; left: 649px; }
+    .parking-layout .spot.C22 { top: 597px; left: 649px; }
+    .parking-layout .spot.C23 { top: 642px; left: 649px; }
+
+
+    .parking-layout .spot.D1 { top: 99px; left: 901px; }
+    .parking-layout .spot.D2 { top: 145px; left: 901px; }
+    .parking-layout .spot.D3 { top: 222px; left: 901px; }
+    .parking-layout .spot.D4 { top: 268px; left: 901px; }
+    .parking-layout .spot.D5 { top: 313px; left: 901px; }
+    .parking-layout .spot.D6 { top: 388px; left: 901px; }
+    .parking-layout .spot.D7 { top: 433px; left: 901px; }
+    .parking-layout .spot.D8 { top: 479px; left: 901px; }
+    .parking-layout .spot.D9 { top: 561px; left: 901px; }
+    .parking-layout .spot.D10 { top: 645px; left: 901px; }
+    .parking-layout .spot.D11 { top: 722px; left: 901px; }
+    .parking-layout .spot.D12 { top: 766px; left: 901px; }
+        width: 75px;height: 40px;
+    .parking-layout .spot.E1 {width:33px;height: 100px;}
+    .parking-layout .spot.E1 { top: 878px; left: 300px;width:33px;height: 100px;}
+    .parking-layout .spot.E2 { top: 878px; left: 340px;width:33px;height: 100px; }
+    .parking-layout .spot.E3 { top: 878px; left: 380px;width:33px;height: 100px; }
+    .parking-layout .spot.E4 { top: 878px; left: 436px;width:33px;height: 100px; }
+    .parking-layout .spot.E5 { top: 878px; left: 474px;width:33px;height: 100px; }
+    .parking-layout .spot.E6 { top: 878px; left: 512px;width:33px;height: 100px; }
+    .parking-layout .spot.E7 { top: 878px; left: 589px;width:33px;height: 100px; }
+    .parking-layout .spot.E8 { top: 878px; left: 629px;width:33px;height: 100px; }
+    .parking-layout .spot.E9 { top: 878px; left: 669px;width:33px;height: 100px; }
+    .parking-layout .spot.E10 { top: 878px; left: 738px;width:33px;height: 100px; }
+    .parking-layout .spot.E11 { top: 878px; left: 778px;width:33px;height: 100px; }
+
+        /* 去掉列表前面的小黑点 */
+    ul {
+        list-style-type: none; /* 去掉小黑点 */
+        padding-left: 0; /* 去掉默认的左内边距 */
+    }
+
+
+        /* 隐藏的时间输入框样式 */
+    #timeInputModal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        z-index: 1000;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #timeInputModal label {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    #timeInputModal input[type="datetime-local"] {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    #timeInputModal button {
+        margin-top: 10px;
+        padding: 5px 10px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+
+       .promotion-banner {
+      background-color: #ffeb3b;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      font-weight: bold;
+      text-align: center;
+      display: none; /* 默认隐藏，由JS控制显示 */
+       line-height: 1.5; /* 增加行高 */
+    }
+
+.promotion-banner div {
+    margin: 3px 0; /* 行间距 */
+}
+    #errorToast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px;
+      background: #ff4444;
+      color: white;
+      border-radius: 5px;
+      z-index: 1000;
+      display: none;
+    }
+
+    #loadingIndicator {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 20px;
+      border-radius: 5px;
+      z-index: 1000;
+      display: none;
+    }

@@ -1,0 +1,88 @@
+{% extends "base.html" %}  <!-- 继承自 base.html 模板 -->
+
+{% block title %}凉心智慧停车科技有限公司 - 公司介绍{% endblock %}  <!-- 覆盖标题块 -->
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="/static/css/company introduction.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/home.css">
+    <style>
+
+    </style>
+{% endblock %}  <!-- 添加额外的 CSS -->
+
+{% block content %}
+    <!-- 内容区域 -->
+    <div class="container">
+        <!-- 关于我们 -->
+        <section id="about">
+            <h2>关于我们</h2>
+            <p>凉心智慧停车科技有限公司成立于2025年，专注于智慧停车领域的研发、设计、建设和运营。我们通过物联网、人工智能和大数据技术，为用户提供高效、便捷的停车解决方案。</p>
+            <p>我们的使命是解决城市停车难题，提升用户体验，推动智慧城市建设。</p>
+        </section>
+
+        <!-- 使命愿景 -->
+        <section id="mission">
+            <div class="mission-card">
+                <h3>使命</h3>
+                <p>通过技术创新和优质服务，解决城市停车难题，提升用户体验，推动智慧城市建设。</p>
+            </div>
+            <div class="mission-card">
+                <h3>愿景</h3>
+                <p>成为全球领先的智慧停车解决方案提供商，打造智慧城市停车新生态。</p>
+            </div>
+        </section>
+
+        <!-- 核心团队 -->
+        <section id="team">
+            <h2>核心团队</h2>
+            <div class="team">
+                <div class="team-member">
+
+                    <h4>沈子钰</h4>
+                    <p>首席执行官</p>
+                </div>
+                <div class="team-member">
+
+                    <h4>刘帅康</h4>
+                    <p>首席技术官</p>
+                </div>
+                <div class="team-member">
+
+                    <h4>颜聪</h4>
+                    <p>首席运营官</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 合作伙伴 -->
+        <section id="partners">
+            <h2>合作伙伴</h2>
+            <div class="partners">
+                <div class="partner">
+                    <img src="/static/img/men.jpg" alt="合作伙伴1">
+                    <h4>凉心科技</h4>
+                </div>
+                <div class="partner">
+                    <img src="/static/img/men1.png" alt="合作伙伴2">
+                    <h4>凉心地产</h4>
+                </div>
+                <div class="partner">
+                    <img src="/static/img/men2.png" alt="合作伙伴3">
+                    <h4>凉心交通</h4>
+                </div>
+                <div class="partner">
+                    <img src="/static/img/men3.jpg" alt="合作伙伴4">
+                    <h4>凉心新能源</h4>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 回到顶部按钮 -->
+    <button id="back-to-top" title="回到顶部">↑</button>
+{% endblock %}  <!-- 覆盖内容块 -->
+
+{% block extra_js %}
+ <script src="/static/js/company_introduction.js"></script>
+
+{% endblock %}  <!-- 添加额外的 JavaScript -->

@@ -1,0 +1,245 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 页面主体样式 */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* 内容区域样式 */
+.content {
+    flex: 1;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+/* 页脚样式 */
+.footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1.3rem;
+    position: relative;
+    width: 100%;
+    z-index: 1000;
+    margin-top: auto;
+}
+
+/* 页脚链接样式 */
+.footer a {
+    color: #6a11cb;
+    transition: color 0.3s ease;
+}
+
+/* 页脚链接悬停样式 */
+.footer a:hover {
+    color: #fff;
+}
+
+/* 链接样式 */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 导航栏样式 */
+.navbar {
+    background: #333;
+    color: #fff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo 和文字容器 */
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Logo 图片样式 */
+.logo-img {
+    height: 70px;
+    width: auto;
+}
+
+/* Logo 文字样式 */
+.bo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+    margin-top: 17px;
+}
+
+/* 导航栏列表样式 */
+.navbar ul {
+    list-style: none;
+    display: flex;
+}
+
+/* 导航栏列表项样式 */
+.navbar ul li {
+    margin-left: 1.5rem;
+}
+
+/* 导航栏链接样式 */
+.navbar ul li a {
+    color: #fff;
+    font-size: 1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+    transition: color 0.3s ease;
+}
+
+/* 导航栏链接悬停样式 */
+.navbar ul li a:hover {
+    color: #6a11cb;
+}
+
+/* 模态框样式 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1001;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #6a11cb;
+}
+
+.modal-body {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+.modal-body h2 {
+    font-size: 1.2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.modal-body p {
+    margin-bottom: 1rem;
+}
+
+.modal-body ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.modal-body ul li {
+    margin-bottom: 0.5rem;
+}
+
+.close-btn {
+    background-color: #6a11cb;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.close-btn:hover {
+    background-color: #4a0d9b;
+}
+
+/* 聊天按钮样式 */
+.chat-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: #6a11cb;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    transition: all 0.3s ease;
+}
+
+.chat-button:hover {
+    background-color: #4a0d9b;
+    transform: scale(1.1);
+}
+
+.chat-button i {
+    color: white;
+    font-size: 24px;
+}
+
+/* 加载动画样式 */
+#chat-loading {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: #6a11cb;
+    border-radius: 50%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

@@ -1,0 +1,29 @@
+{% extends "admin/login.html" %}
+
+{% block branding %}
+<div id="header" class="custom-header">
+    <h1>凉心科技有限公司后台管理系统</h1>
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="/static/css/admin/login.css">
+<style>
+    .custom-header {
+        display: flex !important;
+        justify-content: center !important;
+        width: 100% !important;
+        padding: 20px 0 !important;
+        background: #2c3e50 !important;
+        margin: -30px -30px 30px -30px !important;
+    }
+
+    .custom-header h1 {
+        color: white !important;
+        font-size: 24px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        float: none !important;
+    }
+</style>
+{% endblock %}

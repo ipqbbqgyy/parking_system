@@ -1,0 +1,88 @@
+/* 主容器样式 */
+#container {
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 500px;
+    margin: 50px auto;
+}
+
+/* 头部样式 - 确保100%宽度和居中 */
+#header {
+    background-color: #2c3e50;
+    padding: 20px 0;
+    margin: -30px -30px 30px -30px;
+    border-radius: 8px 8px 0 0;
+    width: calc(100% + 60px); /* 抵消容器的padding */
+}
+
+/* 品牌标题强制居中 */
+#branding {
+    position: relative;
+    margin:0 auto;
+}
+#branding h1 {
+    font-size: 24px;
+    white-space: nowrap;
+}
+
+/* 表单样式 */
+.form-row {
+    margin-bottom: 20px;
+}
+.form-row label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+.form-row input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* 提交按钮样式 */
+.submit-row {
+    text-align: center;
+    padding: 0;
+    margin-top: 30px;
+}
+.submit-row input {
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    max-width: 200px;
+}
+.submit-row input:hover {
+    background-color: #1a252f;
+}
+
+/* 内容标题样式 */
+.content-title {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 18px;
+    color: #333;
+}
+
+/* 错误消息样式 */
+.errornote {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+
+

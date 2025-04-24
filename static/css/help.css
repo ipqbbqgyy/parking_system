@@ -1,0 +1,120 @@
+        * {
+            margin: 0; /* 移除默认的外边距 */
+            padding: 0; /* 移除默认的内边距 */
+            box-sizing: border-box; /* 设置盒模型为 border-box */
+        }
+
+        /* 页面主体样式 */
+        body {
+            font-family: 'Poppins', sans-serif; /* 使用现代化字体 */
+            line-height: 1.6; /* 设置行高 */
+            background-color: #f8f9fa; /* 设置背景颜色 */
+            color: #333; /* 设置字体颜色 */
+        }
+
+        /* 容器样式 */
+        .container {
+            width: 90%; /* 设置宽度 */
+            max-width: 1200px; /* 最大宽度 */
+            margin: 0 auto; /* 居中 */
+            padding: 40px 20px; /* 设置内边距 */
+            background-color: #fff; /* 设置背景颜色 */
+            border-radius: 12px; /* 设置圆角边框 */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+            margin-top: 80px; /* 设置顶部外边距 */
+        }
+
+        /* 标题样式 */
+        h1 {
+            text-align: center; /* 文本居中 */
+            color: #6a11cb; /* 设置字体颜色 */
+            font-size: 2.5rem; /* 设置字体大小 */
+            margin-bottom: 20px; /* 设置底部外边距 */
+        }
+
+        /* 副标题样式 */
+        h2 {
+            color: #2575fc; /* 设置字体颜色 */
+            font-size: 2rem; /* 设置字体大小 */
+            margin-top: 40px; /* 设置顶部外边距 */
+            margin-bottom: 20px; /* 设置底部外边距 */
+        }
+
+        /* 常见问题项样式 */
+        .faq-item {
+            background-color: #f8f9fa; /* 设置背景颜色 */
+            padding: 20px; /* 设置内边距 */
+            border-radius: 8px; /* 设置圆角边框 */
+            margin-bottom: 20px; /* 设置底部外边距 */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
+        }
+
+        .faq-item:hover {
+            transform: translateY(-5px); /* 悬停时上移 */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+        }
+
+        /* 常见问题标题样式 */
+        .faq-item h3 {
+            color: #333; /* 设置字体颜色 */
+            font-size: 1.25rem; /* 设置字体大小 */
+            margin-bottom: 10px; /* 设置底部外边距 */
+            display: flex; /* 使用 Flexbox 布局 */
+            align-items: center; /* 垂直居中 */
+        }
+
+        .faq-item h3 i {
+            margin-right: 10px; /* 设置图标右边距 */
+            color: #6a11cb; /* 设置图标颜色 */
+        }
+
+        /* 常见问题内容样式 */
+        .faq-item p {
+            margin: 0; /* 移除默认的外边距 */
+            line-height: 1.6; /* 设置行高 */
+            color: #555; /* 设置字体颜色 */
+        }
+
+        /* 联系信息样式 */
+        .contact-info {
+            margin-top: 40px; /* 设置顶部外边距 */
+            text-align: center; /* 文本居中 */
+            background-color: #f8f9fa; /* 设置背景颜色 */
+            padding: 20px; /* 设置内边距 */
+            border-radius: 8px; /* 设置圆角边框 */
+        }
+
+        /* 联系信息段落样式 */
+        .contact-info p {
+            margin: 10px 0; /* 设置外边距 */
+            font-size: 1.1rem; /* 设置字体大小 */
+            color: #555; /* 设置字体颜色 */
+        }
+
+        /* 联系信息链接样式 */
+        .contact-info a {
+            color: #6a11cb; /* 设置字体颜色 */
+            text-decoration: none; /* 移除下划线 */
+            font-weight: bold; /* 设置字体加粗 */
+        }
+
+        /* 联系信息链接悬停样式 */
+        .contact-info a:hover {
+            text-decoration: underline; /* 添加下划线 */
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem; /* 调整字体大小 */
+            }
+
+            h2 {
+                font-size: 1.75rem; /* 调整字体大小 */
+            }
+
+            .container {
+                width: 95%; /* 调整宽度 */
+                padding: 20px 10px; /* 调整内边距 */
+            }
+        }

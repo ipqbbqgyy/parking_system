@@ -1,0 +1,52 @@
+{% extends "base.html" %}  <!-- 继承自 base.html -->
+
+{% block title %}帮助中心 - 停车管理系统{% endblock %}  <!-- 覆盖标题 -->
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="/static/css/help.css">  <!-- 引入帮助中心页面的 CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/css/home.css">  <!-- 引入帮助中心页面的 CSS -->
+
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!-- 帮助中心内容 -->
+    <div class="container">
+        <!-- 标题 -->
+        <h1>帮助中心</h1>
+
+        <!-- 常见问题解答 -->
+        <h2>常见问题解答 (FAQ)</h2>
+        <div class="faq-item">
+            <h3><i class="fas fa-question-circle"></i>如何注册账号？</h3>
+            <p>点击页面右上角的“注册”按钮，选择“注册”选项，填写相关信息即可完成注册。</p>
+        </div>
+        <div class="faq-item">
+            <h3><i class="fas fa-question-circle"></i>如何编辑资料？</h3>
+            <p>在个人中心点。编辑资料并输入并保存。</p>
+        </div>
+        <div class="faq-item">
+            <h3><i class="fas fa-question-circle"></i>如何修改密码？</h3>
+            <p>在个人中心页面，点击修改密码，并按照提示输入你的密码。</p>
+        </div>
+        <div class="faq-item">
+            <h3><i class="fas fa-question-circle"></i>如何查看停车场？</h3>
+            <p>登录后，点击导航栏中的“停车管理系统”即可查看当前停车场的布局和可用车位。</p>
+        </div>
+        <div class="faq-item">
+            <h3><i class="fas fa-question-circle"></i>如何联系客服？</h3>
+            <p>您可以通过页面底部的联系方式与我们取得联系，或发送邮件至 918392049@qq.com。</p>
+        </div>
+
+        <!-- 联系信息 -->
+        <div class="contact-info">
+            <h2>联系我们</h2>
+            <p>如果您有其他问题，请随时联系我们的客服团队：</p>
+            <p>电话: <a href="321-7777-980">321-7777-980</a></p>
+            <p>邮箱: <a href="918392049@qq.com">918392049@qq.com</a></p>
+            <p>工作时间: 周一至周五 9:00 - 18:00</p>
+        </div>
+    </div>
+{% endblock %}

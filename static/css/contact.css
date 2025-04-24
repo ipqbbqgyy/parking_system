@@ -1,0 +1,168 @@
+        /* 页面整体样式 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* 联系我们 */
+        #contact {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+            padding: 4rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        #contact h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        #contact p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        #contact .contact-info {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-info-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            flex: 1 1 calc(33.333% - 2rem);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .contact-info-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-info-item i {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-info-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info-item p {
+            font-size: 1rem;
+            color: #ddd;
+        }
+
+        /* 联系表单 */
+        #contact-form {
+            background: #fff;
+            padding: 4rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 4rem;
+        }
+
+        #contact-form h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-group button {
+            background-color: #6a11cb;
+            color: #fff;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .form-group button:hover {
+            background-color: #4a0d9b;
+        }
+
+        /* 消息提示 */
+        .messages {
+            margin-bottom: 2rem;
+        }
+
+        .messages .success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 5px;
+            border: 1px solid #c3e6cb;
+        }
+
+        /* 响应式布局 */
+        @media (max-width: 768px) {
+            .contact-info-item {
+                flex: 1 1 calc(50% - 2rem);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .contact-info-item {
+                flex: 1 1 100%;
+            }
+        }
+
+        /* 回到顶部按钮 */
+        #back-to-top {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: #6a11cb;
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        #back-to-top:hover {
+            background-color: #4a0d9b;
+        }

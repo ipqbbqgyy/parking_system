@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}购买会员 - 凉心智慧停车系统{% endblock %}
+
+{% block extra_css %}
+
+    <link rel="stylesheet" type="text/css" href="/static/css/buy_membership.css">
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="profile-container">
+        <h1>购买会员</h1>
+        <p>在会员期间，可以免费停车出库</p>
+        <form method="post">
+            {% csrf_token %}
+            <label for="membership_type">选择会员类型:</label>
+            <select name="membership_type" id="membership_type">
+                <option value="month">一个月 - 130元</option>
+                <option value="quarter">一个季度 - 400元</option>
+                <option value="year">一年 - 1300元</option>
+            </select>
+            <button type="submit">立即购买</button>
+        </form>
+    </div>
+{% endblock %}

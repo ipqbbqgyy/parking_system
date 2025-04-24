@@ -1,0 +1,63 @@
+/* 通用头部样式 */
+#header {
+    position: relative;
+    height: 60px;
+    background: #2c3e50;
+    z-index: 1000;
+    display: flex;
+    padding: 0 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+/* 品牌标题样式 - 始终居中 */
+#branding {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    pointer-events: none; /* 防止遮挡用户工具 */
+}
+#branding h1 {
+    margin: 0;
+    font-size: 18px;
+    white-space: nowrap;
+    color: #3498db;
+    display: inline-block;
+}
+
+/* 用户工具样式 */
+#user-tools {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* 推至最右侧 */
+    z-index: 1; /* 确保在品牌标题上方 */
+    background: rgba(44, 62, 80, 0.9); /* 半透明背景防止文字重叠 */
+    padding: 0 10px;
+    border-radius: 4px;
+}
+
+/* 滚动效果 */
+body.scrolled #header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+body.scrolled #content {
+    padding-top: 60px;
+}
+
+/* 注销按钮样式 */
+#logout-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
+    text-decoration: underline;
+}
+#logout-btn:hover {
+    color: #f8f9fa;
+}

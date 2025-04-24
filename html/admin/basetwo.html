@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}凉心科技后台管理系统{% endblock %}</title>
+
+    <!-- 引用外部CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/css/admin/basetwo.css/">
+    {% block extra_css %}{% endblock %}
+
+    <!-- 引用Chart.js -->
+    <script src="/static/chart2/chart.min.js/"></script>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div id="header">
+        <div id="branding">
+            <h1>凉心科技有限公司后台管理系统</h1>
+        </div>
+        <div id="user-tools">
+            欢迎，<strong>{{ request.user.username }}</strong>。
+            <a href="/admin/password_change/">修改密码</a> /
+            <form id="logout-form" method="post" action="/admin/logout/">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                <button type="submit">注销</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div id="content">
+        <!-- 面包屑导航 -->
+        <div class="breadcrumbs">
+            {% block breadcrumbs %}
+            <a href="/admin/">首页</a> ›
+            <a href="/admin/parking_app/">Parking_App</a> ›
+            停车场数据分析
+            {% endblock %}
+        </div>
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- 引用基础JS -->
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

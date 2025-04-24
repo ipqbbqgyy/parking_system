@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}停车场概图 - 凉心智慧停车系统{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" type="text/css" href="/static/css/parking_lot.css">
+  <style>
+
+  </style>
+{% endblock %}
+
+{% block content %}
+    <!-- 停车场概图内容 -->
+    <div class="bob">
+        <div class="container">
+            <h1>凉心办公楼-停车管理系统-建议全屏观看</h1>
+
+            <!-- 促销信息将由JS动态更新 -->
+            <div class="promotion-banner" id="promotionBanner"></div>
+
+            <br>
+            <div class="parking-layout">
+                {% for spot in spots %}
+                    <div class="spot {{ spot.id }} {{ spot.status }} S" data-spot-id="{{ spot.id }}">
+                        {{ spot.id }}<br>
+                        <span class="status-text">
+                        {% if spot.status == "occupied" %}
+                            占用
+                        {% elif spot.status == "reserved" %}
+                            已预订
+                        {% else %}
+                            可用
+                        {% endif %}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <h2>图例说明</h2>
+            <ul>
+                <li><strong style="color: #66bb6a;">绿色</strong>：可用车位</li>
+                <li><strong style="color: #ff6b6b;">红色</strong>：占用车位</li>
+                <li><strong style="color: #ffa726;">橙色</strong>：预留车位</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 隐藏的时间输入框 -->
+    <div id="timeInputModal" style="display:none;">
+        <label for="reservationTime">请选择预定使用时间：</label>
+        <input type="datetime-local" id="reservationTime">
+        <button onclick="submitReservationTime()">确定</button>
+        <button onclick="cancelReservationTime()">取消</button>
+    </div>
+
+    <!-- 错误提示 -->
+    <div id="errorToast"></div>
+
+    <!-- 加载指示器 -->
+    <div id="loadingIndicator">加载中，请稍候...</div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="/static/js/parking_lot.js"></script>
+{% endblock %}

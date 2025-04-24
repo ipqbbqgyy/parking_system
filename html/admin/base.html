@@ -1,0 +1,30 @@
+{% extends "admin/base.html" %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" type="text/css" href="/static/css/admin/base.css">
+{% endblock %}
+
+{% block header %}
+<div id="header">
+    <div id="branding"  style=" text-align: center;">
+        <h1 style="color: #fff; margin: 0; display: inline-block;" >凉心科技有限公司后台管理系统</h1>
+    </div>
+    <div id="user-tools">
+        {% if user.is_authenticated %}
+        欢迎，<strong>{% firstof user.get_short_name user.get_username %}</strong>。
+        {% if user.has_usable_password %}
+        <a href="{% url 'admin:password_change' %}">修改密码</a> /
+        {% endif %}
+        <form id="logout-form" method="post" action="{% url 'admin:logout' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" style="background: none; border: none; color: #fff; cursor: pointer; padding: 0; font: inherit;">注销</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+{{ block.super }}
+<script src="/static/js/admin/base.js"></script>
+{% endblock %}

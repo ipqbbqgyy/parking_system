@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}加入我们 - 凉心智慧停车科技有限公司{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" type="text/css" href="/static/css/join_us.css">
+  <style>
+
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="job-list">
+    <h2>加入我们</h2>
+    {% if jobs %}
+      {% for job in jobs %}
+        <div class="job-card">
+          <h3>{{ job.title }}</h3>
+          <p>工作地点：{{ job.location }}</p>
+          <a href="{% url 'job_detail' job.id %}">查看详情</a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="no-jobs">
+        <div class="icon">📭</div> <!-- 可以使用图标字体或图片 -->
+        <h3>暂无职位发布</h3>
+        <p>我们正在积极筹备中，敬请期待！</p>
+        <p>如果您对我们的公司感兴趣，欢迎随时联系我们，了解更多合作机会。</p>
+        <a href="{% url 'contact_us' %}" class="contact-btn">联系我们</a>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

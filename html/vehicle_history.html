@@ -1,0 +1,46 @@
+{% extends "base.html" %}  <!-- 继承自 base.html -->
+
+{% block title %}停车记录 - 凉心智慧停车系统{% endblock %}  <!-- 覆盖标题 -->
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="/static/css/we.css">  <!-- 引入个人中心页面的 CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/css/vehicle_history.css">  <!-- 引入个人中心页面的 CSS -->
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!-- 停车记录内容 -->
+    <div class="profile-container">
+        <!-- 个人中心按钮 -->
+        <div class="profile-actions">
+            <a href="/we/">返回个人中心</a>
+        </div>
+
+        <div class="profile-header">
+            <h1>停车记录</h1>
+        </div>
+        <div class="vehicle-list">
+            <ul>
+                {% for vehicle in vehicles %}
+                    <li>
+                        <span>车牌号: {{ vehicle.license_plate }}</span>
+                        <span>车辆类型: {{ vehicle.vehicle_type }}</span>
+                        <span>入场时间: {{ vehicle.entry_time|date:"Y-m-d H:i:s" }}</span>
+                        <span>出场时间: {% if vehicle.exit_time %}{{ vehicle.exit_time|date:"Y-m-d H:i:s" }}{% else %}未出场{% endif %}</span>
+                    </li>
+                {% empty %}
+                    <li>暂无停车记录</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- 返回顶部按钮 -->
+    <a href="#" class="back-to-top">返回顶部</a>
+
+    <!-- JavaScript 实现返回顶部功能 -->
+
+ <script src="/static/js/vehicle_history.js"></script>
+{% endblock %}

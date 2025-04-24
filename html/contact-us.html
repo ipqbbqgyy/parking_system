@@ -1,0 +1,55 @@
+{% extends "base.html" %}  <!-- 继承自 base.html 模板 -->
+
+{% block title %}凉心智慧停车系统 - 联系我们{% endblock %}  <!-- 覆盖标题块 -->
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="/static/css/contact-us.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/home.css">
+    <style>
+
+    </style>
+{% endblock %}  <!-- 添加额外的 CSS -->
+
+{% block content %}
+    <!-- 内容区域 -->
+    <div class="container">
+        <!-- 消息提示 -->
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="success">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- 联系我们 -->
+        <section id="contact">
+            <h2>联系我们</h2>
+            <p>如果您对我们的智慧停车系统感兴趣或有任何问题，欢迎随时联系我们。</p>
+            <div class="contact-info">
+                <div class="contact-info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>地址</h3>
+                    <p>凉心市凉心区凉心路凉心号</p>
+                </div>
+                <div class="contact-info-item">
+                    <i class="fas fa-phone"></i>
+                    <h3>电话</h3>
+                    <p>+86 321-7777-980</p>
+                </div>
+                <div class="contact-info-item">
+                    <i class="fas fa-envelope"></i>
+                    <h3>邮箱</h3>
+                    <p>918392049@qq.com</p>
+                </div>
+            </div>
+        </section>
+
+
+
+
+{% endblock %}  <!-- 覆盖内容块 -->
+
+{% block extra_js %}
+ <script src="/static/js/contact.js"></script>
+{% endblock %}  <!-- 添加额外的 JavaScript -->

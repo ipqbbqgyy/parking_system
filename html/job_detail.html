@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ job.title }} - 凉心智慧停车科技有限公司{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" type="text/css" href="/static/css/job_detail.css">
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="job-detail">
+        <!-- 渲染消息 -->
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- 职位名称和工作地点 -->
+        <h2>{{ job.title }}</h2>
+        <p>工作地点：{{ job.location }}</p>
+
+        <h3>职位描述</h3>
+        <p>{{ job.description }}</p>
+
+        <h3>职位要求</h3>
+        <p>{{ job.requirements }}</p>
+
+        <div class="application-info">
+            <h3>如何申请</h3>
+            <p>
+                请将您的简历发送至我们的邮箱：
+                <a href="918392049@qq.com">918392049@qq.com</a>。
+            </p>
+            <p>
+                邮件标题请注明：<strong>申请职位 - {{ job.title }}</strong>。
+            </p>
+            <p>
+                我们会在收到简历后尽快与您联系。
+            </p>
+        </div>
+    </div>
+{% endblock %}

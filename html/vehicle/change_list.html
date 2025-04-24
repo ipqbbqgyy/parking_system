@@ -1,0 +1,35 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+<h1>停车场管理</h1>
+<table>
+    <thead>
+        <tr>
+            <th>车牌号</th>
+            <th>车辆类型</th>
+            <th>入场时间</th>
+            <th>出场时间</th>
+            <th>是否被预订</th>
+            <th>停车时长（小时）</th>
+            <th>费用（元）</th>
+            <th>缴费状态</th>
+            <th>用户</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for vehicle in cl.result_list %}
+        <tr>
+            <td>{{ vehicle.license_plate }}</td>
+            <td>{{ vehicle.get_vehicle_type_display }}</td>
+            <td>{{ vehicle.entry_time }}</td>
+            <td>{{ vehicle.exit_time|default:"未出场" }}</td>
+            <td>{% if vehicle.reserved %}是{% else %}否{% endif %}</td>
+            <td>{{ vehicle.parking_duration|floatformat:2 }}</td>
+            <td>{{ vehicle.calculate_fee }}</td>
+            <td>{% if vehicle.paid %}已缴费{% else %}未缴费{% endif %}</td>
+            <td>{{ vehicle.user.username }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

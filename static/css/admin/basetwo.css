@@ -1,0 +1,269 @@
+        /* 凉心科技后台管理系统风格 */
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        /* 顶部导航栏 - 与后台一致 */
+        #header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #2c3e50;
+            color: #3498db;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        #branding h1 {
+            color: #3498db !important;
+            margin: 0;
+            font-size: 18px;
+        }
+
+        #user-tools {
+            font-size: 13px;
+            color: white;
+        }
+
+        #user-tools a {
+            color: white;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        #user-tools a:hover {
+            color: #f8f9fa;
+        }
+
+        /* 主内容区域 */
+        #content {
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+        /* 卡片样式 */
+        .module {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 15px;
+        }
+
+        /* 标题样式 */
+        h1 {
+            color: #4ac1f7;
+            font-size: 20px;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        h2 {
+            color: #3498db;
+            font-size: 16px;
+            margin: 20px 0 10px;
+        }
+
+        /* 统计卡片 */
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .stat-card.show {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .stat-card h3 {
+            margin-top: 0;
+            color: #3498db;
+            font-size: 14px;
+        }
+
+        .stat-card p {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #2c3e50;
+        }
+
+        /* 图表容器 */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        tr {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        tr.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e6f7ff;
+        }
+
+        .parking-now {
+            background-color: #fff8e1;
+        }
+
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+        }
+
+        .pagination button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 面包屑导航 */
+        .breadcrumbs {
+            margin: 0 0 20px;
+            padding: 0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .breadcrumbs a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .breadcrumbs a:hover {
+            color: #2c3e50;
+        }
+
+        /* 消息提示 */
+        .error {
+            color: #e74c3c;
+            padding: 10px;
+            background-color: #fdecea;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease;
+            font-size: 13px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            animation: pulse 1.5s infinite;
+            font-size: 13px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            color: #95a5a6;
+            font-style: italic;
+            animation: fadeIn 1s ease;
+            font-size: 13px;
+        }
+
+        /* 注销按钮样式 - 新增 */
+        #logout-form {
+            display: inline;
+        }
+        #logout-form button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font: inherit;
+            padding: 0;
+            margin-left: 10px;
+            text-decoration: underline;
+        }
+        #logout-form button:hover {
+            color: #f8f9fa;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }

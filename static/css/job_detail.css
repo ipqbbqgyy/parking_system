@@ -1,0 +1,52 @@
+        .job-detail {
+            padding: 2rem;
+        }
+
+        .job-detail h2 {
+            font-size: 2rem;
+            color: #6a11cb;
+            margin-bottom: 1rem;
+        }
+
+        .job-detail h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-detail p {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .application-info {
+            margin-top: 2rem;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .application-info h3 {
+            font-size: 1.5rem;
+            color: #6a11cb;
+            margin-bottom: 1rem;
+        }
+
+        .application-info p {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .application-info a {
+            color: #6a11cb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .application-info a:hover {
+            text-decoration: underline;
+        }

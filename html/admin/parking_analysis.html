@@ -1,0 +1,55 @@
+{% extends "admin/basetwo.html" %}
+
+{% block title %}停车场数据分析系统 - 凉心科技{% endblock %}
+
+{% block content %}
+    <div class="module">
+        <h1>停车场数据分析系统</h1>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <h3>总停车次数</h3>
+                <p id="totalCount">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>平均停车时长</h3>
+                <p id="avgDuration">0 分钟</p>
+            </div>
+            <div class="stat-card">
+                <h3>最长停车时间</h3>
+                <p id="maxDuration">0 分钟</p>
+            </div>
+            <div class="stat-card">
+                <h3>最短停车时间</h3>
+                <p id="minDuration">0 分钟</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 各区域停车数量分布 -->
+    <div class="module">
+        <h2>各区域停车数量分布</h2>
+        <div class="chart-container">
+            <canvas id="areaChart"></canvas>
+            <div id="noChartData" class="no-data" style="display: none;">无足够的区域数据可显示图表</div>
+        </div>
+    </div>
+
+    <!-- 停车时长分布 -->
+    <div class="module">
+        <h2>停车时长分布</h2>
+        <div class="chart-container">
+            <canvas id="durationChart"></canvas>
+            <div id="noDurationData" class="no-data" style="display: none;">无足够的时长数据可显示图表</div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/admin/parking_analysis.css">
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/chart/chart.min.js"></script>
+<script src="/static/js/admin/parking_analysis.js"></script>
+{% endblock %}

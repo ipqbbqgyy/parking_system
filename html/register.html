@@ -1,0 +1,78 @@
+{% extends "base.html" %}  <!-- 继承自 base.html -->
+
+{% block title %}注册 - 凉心智慧停车系统{% endblock %}  <!-- 覆盖标题 -->
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="/static/css/register.css">  <!-- 引入注册页面的 CSS -->
+    <style>
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <!-- 注册表单 -->
+    <div class="container">
+        <div class="header">
+            <i class="fas fa-parking"></i>
+            <h1>停车场管理系统</h1>
+        </div>
+        <form id="register-form" class="form" method="post" action="{% url 'register_v' %}">
+            {% csrf_token %}
+            <h2>注册新账号</h2>
+            <!-- 只显示当前请求的错误信息 -->
+            {% if messages %}
+                {% for message in messages %}
+                    {% if not forloop.last or not request.user.is_authenticated %}
+                        <div class="error-message">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" name="username" placeholder="用户名" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" name="email" placeholder="邮箱" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password1" placeholder="密码" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password2" placeholder="确认密码" required>
+            </div>
+             <!-- 人机验证 -->
+            <div class="slider-container">
+                <div class="slider-title">请滑动滑块完成验证</div>
+                <div class="slider-wrapper">
+                    <div class="slider-track" id="slider-track">
+                        <div class="slider-fill" id="slider-fill"></div>
+                        <div class="slider-thumb" id="slider-thumb"></div>
+                    </div>
+                    <div class="slider-value" id="slider-value">0%</div>
+                </div>
+                <div class="verification-success" id="verification-success">
+                    <i class="fas fa-check-circle"></i> 验证成功
+                </div>
+                <input type="hidden" name="slider_value" id="slider_value" value="0">
+            </div>
+            <!-- 同意条款复选框 -->
+            <div class="terms-checkbox">
+                <label>
+                    <input type="checkbox" name="agree-terms" required>
+                    我已阅读并同意
+                    <a href="#privacy" id="form-privacy-link">隐私政策</a> 和
+                    <a href="#terms" id="form-terms-link">服务条款</a>
+                </label>
+            </div>
+            <button type="submit">注册</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+ <script src="/static/js/register.js"></script>
+
+{% endblock %}

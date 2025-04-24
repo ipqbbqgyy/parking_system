@@ -1,0 +1,58 @@
+{% extends "admin/basetwo.html" %}
+
+{% block title %}收入分析系统 - 凉心科技{% endblock %}
+
+{% block content %}
+    <div class="module">
+        <h1>收入分析系统</h1>
+
+        <div class="time-tabs">
+            <button class="time-tab active" data-period="today">今日</button>
+            <button class="time-tab" data-period="week">本周</button>
+            <button class="time-tab" data-period="month">本月</button>
+            <button class="time-tab" data-period="quarter">本季度</button>
+            <button class="time-tab" data-period="year">本年</button>
+
+        </div>
+
+        <div class="stats-container">
+            <h2 id="statsTitle">今日统计数据</h2>
+            <div class="stat-card">
+                <h3>总收入</h3>
+                <p id="totalIncome">0 元</p>
+            </div>
+            <div class="stat-card">
+                <h3>平均每日收入</h3>
+                <p id="avgDailyIncome">0 元</p>
+            </div>
+            <div class="stat-card">
+                <h3>最高单日收入</h3>
+                <p id="maxDailyIncome">0 元</p>
+            </div>
+            <div class="stat-card">
+                <h3>停车次数</h3>
+                <p id="parkingCount">0 次</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="module">
+        <h2>收入趋势</h2>
+        <div class="chart-container">
+            <canvas id="incomeTrendChart"></canvas>
+            <div id="noIncomeData" class="no-data" style="display: none;">
+                <i class="icon-no-data"></i>
+                <p>无收入数据可显示图表</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/admin/income_analysis.css">
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/chart/chart.min.js"></script>
+<script src="/static/js/admin/income_analysis.js"></script>
+{% endblock %}

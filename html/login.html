@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}登录 - 凉心智慧停车系统{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="/static/css/login.css">
+    <style>
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(5px); }
+            50% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+            100% { transform: translateX(0); }
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        .error-message {
+            color: #dc3545 !important;
+            background-color: #f8d7da !important;
+            padding: 10px !important;
+            margin: 15px 0 !important;
+            border-radius: 4px !important;
+            display: block !important;
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="header">
+            <i class="fas fa-parking"></i>
+            <h1>停车场管理系统</h1>
+        </div>
+
+        <form id="login-form" class="form" method="post" action="/login_v/">
+            {% csrf_token %}
+            <h2>欢迎登录</h2>
+            <div id="error-container">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="error-message">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" name="username" placeholder="用户名" required>
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="password" placeholder="密码" required>
+            </div>
+
+            <div class="slider-container">
+                <div class="slider-title">请滑动滑块完成验证</div>
+                <div class="slider-wrapper">
+                    <div class="slider-track" id="slider-track">
+                        <div class="slider-fill" id="slider-fill"></div>
+                        <div class="slider-thumb" id="slider-thumb"></div>
+                    </div>
+                    <div class="slider-value" id="slider-value">0%</div>
+                </div>
+                <div class="verification-success" id="verification-success">
+                    <i class="fas fa-check-circle"></i> 验证成功
+                </div>
+                <input type="hidden" name="slider_value" id="slider_value" value="0">
+            </div>
+
+            <button type="submit" id="login-button">登录</button>
+        </form>
+
+        <p class="register-link">
+            没有账号？<a href="/register/">立即注册</a>
+        </p>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="/static/js/login.js"></script>
+{% endblock %}

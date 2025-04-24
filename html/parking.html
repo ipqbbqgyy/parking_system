@@ -1,0 +1,130 @@
+{% extends "base.html" %}  <!-- 继承自 base.html -->
+
+{% block title %}停车场概图 - 凉心智慧停车系统{% endblock %}  <!-- 覆盖标题 -->
+
+{% block extra_css %}
+  <link rel="stylesheet" type="text/css" href="/static/css/parking.css">
+  <style>
+
+  </style>
+{% endblock %}
+
+{% block content %}
+    <!-- 停车场概图内容 -->
+    <div class="bob">
+        <div class="container">
+            <h1>停车场概图-建议全屏观看使用请到停车管理系统</h1>
+            <div class="parking-layout">
+                <!-- 停车位示例 -->
+                <div class="spot A1 occupied S">A1<br>占用</div>
+                <div class="spot A2 occupied S">A2<br>占用</div>
+                <div class="spot A3 reserved S">A3<br>预留</div>
+                <div class="spot A4 occupied S">A4<br>占用</div>
+                <div class="spot A5 occupied S">A5<br>占用</div>
+                <div class="spot A6 available S">A6<br>可用</div>
+                <div class="spot A7 reserved D">A7<br>预留</div>
+                <div class="spot A8 reserved D">A8<br>预留</div>
+                <div class="spot A9 reserved D">A9<br>预留</div>
+                <div class="spot A10 reserved D">A10<br>预留</div>
+                <div class="spot A11 reserved D">A11<br>预留</div>
+                <div class="spot A12 reserved D">A12<br>预留</div>
+                <div class="spot A13 occupied S">A13<br>占用</div>
+                <div class="spot A14 reserved S">A14<br>预留</div>
+                <div class="spot A15 available S">A15<br>可用</div>
+
+                <div class="spot B1 occupied S">B1<br>占用</div>
+                <div class="spot B2 occupied S">B2<br>占用</div>
+                <div class="spot B3 reserved S">B3<br>预留</div>
+                <div class="spot B4 occupied S">B4<br>占用</div>
+                <div class="spot B5 occupied S">B5<br>占用</div>
+                <div class="spot B6 available S">B6<br>可用</div>
+                <div class="spot B7 reserved S">B7<br>预留</div>
+                <div class="spot B8 reserved S">B8<br>预留</div>
+                <div class="spot B9 reserved S">B9<br>预留</div>
+                <div class="spot B10 reserved S">B10<br>预留</div>
+                <div class="spot B11 reserved S">B11<br>预留</div>
+                <div class="spot B12 reserved S">B12<br>预留</div>
+                <div class="spot B13 occupied S">B13<br>占用</div>
+                <div class="spot B14 reserved S">B14<br>预留</div>
+                <div class="spot B15 available S">B15<br>可用</div>
+                <div class="spot B16 reserved S">B16<br>预留</div>
+                <div class="spot B17 reserved S">B17<br>预留</div>
+                <div class="spot B18 reserved S">B18<br>预留</div>
+                <div class="spot B19 reserved S">B19<br>预留</div>
+                <div class="spot B20 occupied S">B20<br>占用</div>
+                <div class="spot B21 reserved S">B21<br>预留</div>
+                <div class="spot B22 reserved S">B22<br>预留</div>
+                <div class="spot B23 available S">B23<br>可用</div>
+                <div class="spot B24 available S">B24<br>可用</div>
+
+
+
+                <div class="spot C1 occupied S">C1<br>占用</div>
+                <div class="spot C2 occupied S">C2<br>占用</div>
+                <div class="spot C3 reserved S">C3<br>预留</div>
+                <div class="spot C4 occupied S">C4<br>占用</div>
+                <div class="spot C5 occupied S">C5<br>占用</div>
+                <div class="spot C6 available S">C6<br>可用</div>
+                <div class="spot C7 reserved S">C7<br>预留</div>
+                <div class="spot C8 reserved S">C8<br>预留</div>
+                <div class="spot C9 reserved S">C9<br>预留</div>
+                <div class="spot C10 reserved S">C10<br>预留</div>
+                <div class="spot C11 reserved S">C11<br>预留</div>
+                <div class="spot C12 reserved S">C12<br>预留</div>
+                <div class="spot C13 occupied S">C13<br>占用</div>
+                <div class="spot C14 reserved S">C14<br>预留</div>
+                <div class="spot C15 available S">C15<br>可用</div>
+                <div class="spot C16 reserved S">C16<br>预留</div>
+                <div class="spot C17 reserved S">C17<br>预留</div>
+                <div class="spot C18 reserved S">C18<br>预留</div>
+                <div class="spot C19 reserved S">C19<br>预留</div>
+                <div class="spot C20 occupied S">C20<br>占用</div>
+                <div class="spot C21 reserved S">C21<br>预留</div>
+                <div class="spot C22 reserved S">C22<br>预留</div>
+                <div class="spot C23 available S">C23<br>可用</div>
+                <div class="spot C24 available S">C24<br>可用</div>
+
+
+
+
+                <div class="spot D1 occupied S">D1<br>占用</div>
+                <div class="spot D2 occupied S">D2<br>占用</div>
+                <div class="spot D3 reserved S">D3<br>预留</div>
+                <div class="spot D4 occupied S">D4<br>占用</div>
+                <div class="spot D5 occupied S">D5<br>占用</div>
+                <div class="spot D6 available S">D6<br>可用</div>
+                <div class="spot D7 reserved S">D7<br>预留</div>
+                <div class="spot D8 reserved S">D8<br>预留</div>
+                <div class="spot D9 reserved S">D9<br>预留</div>
+                <div class="spot D10 reserved S">D11<br>预留</div>
+                <div class="spot D11 reserved S">D12<br>预留</div>
+                <div class="spot D12 reserved S">D10<br>预留</div>
+
+
+
+
+
+                <div class="spot E1 occupied S">E1<br>占用</div>
+                <div class="spot E2 occupied S">E2<br>占用</div>
+                <div class="spot E3 reserved S">E3<br>预留</div>
+                <div class="spot E4 occupied S">E4<br>占用</div>
+                <div class="spot E5 occupied S">E5<br>占用</div>
+                <div class="spot E6 available S">E6<br>可用</div>
+                <div class="spot E7 reserved S">E7<br>预留</div>
+                <div class="spot E8 reserved S">E8<br>预留</div>
+                <div class="spot E9 reserved S">E9<br>预留</div>
+                <div class="spot E10 reserved S">E10<br>预留</div>
+                <div class="spot E11 reserved S">E11<br>预留</div>
+
+                <!-- 其他停车位 -->
+            </div>
+
+            <h2>图例说明</h2>
+            <ul>
+                <li><strong style="color: #66bb6a;">绿色</strong>：可用车位</li>
+                <li><strong style="color: #ff6b6b;">红色</strong>：占用车位</li>
+                <li><strong style="color: #ffa726;">橙色</strong>：预留车位</li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

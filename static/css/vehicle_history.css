@@ -1,0 +1,94 @@
+        /* 停车记录页面的自定义样式 */
+        .profile-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex: 1; /* 确保内容区域占据剩余空间 */
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-header h1 {
+            font-size: 2rem;
+            color: #6a11cb;
+        }
+
+        /* 车辆信息样式 */
+        .vehicle-list {
+            margin-top: 2rem;
+        }
+
+        .vehicle-list h2 {
+            font-size: 1.5rem;
+            color: #6a11cb;
+            margin-bottom: 1rem;
+        }
+
+        .vehicle-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .vehicle-list ul li {
+            background: #f4f4f4;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vehicle-list ul li span {
+            font-weight: bold;
+        }
+
+        /* 用户名样式 */
+        .vehicle-list ul li .username {
+            color: #6a11cb;  /* 设置用户名颜色 */
+            font-weight: bold;  /* 设置用户名加粗 */
+        }
+
+        /* 返回按钮样式 */
+        .profile-actions {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .profile-actions a {
+            margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            background: #6a11cb;
+            color: #fff;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .profile-actions a:hover {
+            background: #4a0d9b;
+        }
+
+        /* 返回顶部按钮样式 */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 0.5rem 1rem;
+            background: #6a11cb;
+            color: #fff;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+            display: none; /* 默认隐藏 */
+        }
+
+        .back-to-top:hover {
+            background: #4a0d9b;
+        }

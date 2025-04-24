@@ -1,0 +1,110 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+    {% if not user.is_superuser %}
+    <div class="permission-warning">
+        <p>⚠️ 您没有查看管理员日志的权限</p>
+    </div>
+    {% else %}
+    <div class="module">
+        <h2>管理员操作日志</h2>
+        <div id="admin-logs-container">
+            <table id="admin-logs-table" class="table">
+                <thead>
+                    <tr>
+                        <th>时间</th>
+                        <th>操作人</th>
+                        <th>操作类型</th>
+                        <th>对象类型</th>
+                        <th>对象ID</th>
+                        <th>操作详情</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 日志将通过JavaScript动态加载 -->
+                </tbody>
+            </table>
+            <div id="loading-indicator" style="text-align: center; padding: 20px;">
+                <p>加载中...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/admin/admin_logs/data/', {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                const tableBody = document.querySelector('#admin-logs-table tbody');
+                const loadingIndicator = document.getElementById('loading-indicator');
+
+                if (data.logs.length === 0) {
+                    loadingIndicator.innerHTML = '<p>暂无日志记录</p>';
+                    return;
+                }
+
+                data.logs.forEach(log => {
+                    const row = document.createElement('tr');
+                    // 转换为本地时间并格式化
+                    const timestamp = new Date(log.timestamp);
+                    const localTime = timestamp.toLocaleString('zh-CN', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false
+                    }).replace(/\//g, '-');
+
+                    row.innerHTML = `
+                        <td>${localTime}</td>
+                        <td>${log.username}</td>
+                        <td>${log.action}</td>
+                        <td>${log.content_type || '-'}</td>
+                        <td>${log.object_id || '-'}</td>
+                        <td>${log.message}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                loadingIndicator.style.display = 'none';
+            } else {
+                alert('加载日志失败: ' + (data.error || '未知错误'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('加载日志时发生错误');
+        });
+    });
+    </script>
+
+    <style>
+    #admin-logs-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    #admin-logs-table th, #admin-logs-table td {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    #admin-logs-table th {
+        background-color: #f5f5f5;
+        font-weight: bold;
+    }
+    </style>
+    {% endif %}
+{% endblock %}

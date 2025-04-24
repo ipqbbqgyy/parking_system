@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% load tz %}
+
+{% block title %}个人中心 - 凉心智慧停车系统{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="/static/css/we.css">
+{% endblock %}
+
+{% block content %}
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>个人中心</h1>
+        </div>
+        <div class="profile-details">
+            <div class="detail">
+                <label>用户名:</label>
+                <span>{{ user.username }}</span>
+            </div>
+            <div class="detail">
+                <label>邮箱:</label>
+                <span>{{ user.email }}</span>
+            </div>
+            <div class="detail">
+                <label>注册时间:</label>
+                <span>{{ user.date_joined|date:"Y-m-d H:i:s" }}</span>
+            </div>
+            <div class="detail">
+                <label>最后登录时间:</label>
+                <span>{{ user.last_login|date:"Y-m-d H:i:s" }}</span>
+            </div>
+            <div class="detail">
+                <label>会员状态:</label>
+                <span>
+                    {% if user.membership and user.membership.is_active %}
+                        {{ user.membership.get_membership_type_display }} (有效期至 {{ user.membership.end_date|date:"Y-m-d H:i:s" }})
+                    {% else %}
+                        无有效会员
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <a href="/buy_membership/">购买会员</a>
+            <a href="/edit_profile/">编辑资料</a>
+            <a href="/change_password/">修改密码</a>
+            <a href="/vehicle_history/">停车记录</a>
+            <a href="#" id="feedbackHistoryBtn">反馈记录</a>
+            <a href="#" id="feedbackBtn">反馈意见</a>
+            <a href="/logout/">退出登录</a>
+        </div>
+
+        <!-- 我的预订 -->
+        <div class="reservation-list">
+           <h2>我的预订 <button class="back-to-parking" onclick="window.location.href='/parking_lot/'">返回车位图</button></h2>
+            <ul>
+                {% for reservation in all_reservations %}
+                    <li>
+                        <span class="spot-info">车位号: {{ reservation.spot_number }}</span>
+                        <span>车牌号: {{ reservation.license_plate }}</span>
+                        <span>车辆类型: {{ reservation.vehicle_type_chinese }}</span>
+                        <span>使用时间: {{ reservation.reservation_use_time|localtime|date:"Y-m-d H:i:s" }}</span>
+                        <span>过期时间: {{ reservation.reservation_expiry_time|localtime|date:"Y-m-d H:i:s" }}</span>
+                        {% if reservation.reservation_expiry_time and reservation.reservation_expiry_time > current_time %}
+                            <button onclick="useReservation({{ reservation.id }})">使用</button>
+                            <button onclick="cancelReservation({{ reservation.id }})">取消</button>
+                        {% else %}
+                            <span class="expired">已过期</span>
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <li>暂无预订记录</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- 我的车辆 -->
+        <div class="vehicle-list">
+            <h2>入库车辆 <button class="back-to-parking" onclick="window.location.href='/parking_lot/'">返回车位图</button></h2>
+            <ul>
+                {% if user.is_superuser %}
+                    <!-- 超级用户查看所有车辆 -->
+                    {% for vehicle in all_vehicles %}
+                        <li>
+                            <span class="spot-info">车位号: {{ vehicle.spot_number }}</span>
+                            <span>车牌号: {{ vehicle.license_plate }}</span>
+                            <span>车辆类型: {{ vehicle.vehicle_type_chinese }}</span>
+                            <span>入场时间: {{ vehicle.entry_time|localtime|date:"Y-m-d H:i:s" }}</span>
+                            <span>状态: {% if vehicle.exit_time %}已出场{% else %}在场{% endif %}</span>
+                            <span class="username">用户名: {{ vehicle.user.username }}</span>
+                            {% if not vehicle.exit_time %}
+                                <button class="exit-button" onclick="showPaymentModal({{ vehicle.id }})">出场</button>
+                            {% endif %}
+                        </li>
+                    {% empty %}
+                        <li>暂无入库车辆</li>
+                    {% endfor %}
+                {% else %}
+                    <!-- 普通用户查看自己的车辆 -->
+                    {% for vehicle in all_vehicles %}
+                        <li>
+                            <span class="spot-info">车位号: {{ vehicle.spot_number }}</span>
+                            <span>车牌号: {{ vehicle.license_plate }}</span>
+                            <span>车辆类型: {{ vehicle.vehicle_type_chinese }}</span>
+                            <span>入场时间: {{ vehicle.entry_time|localtime|date:"Y-m-d H:i:s" }}</span>
+                            <span>状态: {% if vehicle.exit_time %}已出场{% else %}在场{% endif %}</span>
+                            {% if not vehicle.exit_time %}
+                                <button class="exit-button" onclick="showPaymentModal({{ vehicle.id }})">出场</button>
+                            {% endif %}
+                        </li>
+                    {% empty %}
+                        <li>暂无入库车辆</li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- 支付模态框 -->
+        <div id="paymentModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closePaymentModal()">&times;</span>
+                <h2>支付信息</h2>
+                <div id="paymentDetails">
+                    <!-- 支付信息将动态加载到这里 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 反馈模态框 -->
+        <div id="feedbackModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeFeedbackModal()">&times;</span>
+                <h2>反馈意见</h2>
+                <form id="feedbackForm">
+                    <div class="form-group">
+                        <label for="feedbackType">反馈类型:</label>
+                        <select id="feedbackType" class="form-control" required>
+                            <option value="">请选择反馈类型</option>
+                            <option value="suggestion">建议</option>
+                            <option value="problem">问题</option>
+                            <option value="complaint">投诉</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="feedbackContent">反馈内容:</label>
+                        <textarea id="feedbackContent" class="form-control" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">提交反馈</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框容器 -->
+    <div id="modals-container"></div>
+
+    <script src="/static/js/we.js"></script>
+{% endblock %}
