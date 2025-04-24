@@ -858,4 +858,4 @@ def payment(request, vehicle_id):
             return JsonResponse({"success": True, "message": "支付成功"})
         except Vehicle.DoesNotExist:
             return JsonResponse({"success": False, "message": "车辆信息不存在"})
-    return JsonResponse({"success": False, "message": "无效的请求方法"})
+    return JsonResponse({"success": False, "message": "无效的请求方法asd"})
