@@ -4,6 +4,6 @@
 
 # 核心依赖
 # requirements.txt
-Django==5.0
-pymysql==1.1.0  # 包含PyMySQL功能
+Django==4.2.5
+pymysql==1.1.0
 cryptography
