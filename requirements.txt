@@ -3,7 +3,7 @@
 --trusted-host pypi.tuna.tsinghua.edu.cn
 
 # 核心依赖
+# requirements.txt
 Django==5.0
-pymysql==1.1.0
+pymysql==1.1.0  # 包含PyMySQL功能
 cryptography
-PyMySQL
