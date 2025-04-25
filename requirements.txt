@@ -1,0 +1,9 @@
+# 使用清华镜像源安装依赖（自动生效）
+-i https://pypi.tuna.tsinghua.edu.cn/simple
+--trusted-host pypi.tuna.tsinghua.edu.cn
+
+# 核心依赖
+Django==5.0
+pymysql==1.1.0
+cryptography
+PyMySQL
