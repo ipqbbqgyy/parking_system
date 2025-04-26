@@ -10,3 +10,4 @@ pkill -TERM -f five_class_demo_uwsgi.ini
 sleep 3  # 等待请求完成
 
 echo -e "\n\033[34m[3/3] 强制清理残留...\033[0m"
+pkill -9 -f five_class_demo_uwsgi.ini 2>/dev/null
