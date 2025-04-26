@@ -14,4 +14,3 @@ echo -e "\n\033[34m[3/4] 启动新实例...\033[0m"
 
 echo -e "\n\033[42;1m[4/4] 重启完成，验证进程:\033[0m"
 sleep 1
-ps -ef | grep five_class_demo_uwsgi.ini | grep -v grep
