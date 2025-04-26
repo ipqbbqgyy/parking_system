@@ -816,7 +816,9 @@ def cancel_reservation(request, vehicle_id):
     return JsonResponse({"success": False, "message": "无效的请求方法"})
 
 # 车辆出场视图
-@csrf_protect
+csrf_protect
+
+
 @login_required
 def exit_vehicle(request, vehicle_id):
     # 获取车辆记录
@@ -832,6 +834,13 @@ def exit_vehicle(request, vehicle_id):
     original_fee = calculate_original_fee(parking_duration)
     fee = vehicle.calculate_fee()
 
+    # 检查是否有有效的促销活动
+    has_promotion = Promotion.objects.filter(
+        is_active=True,
+        start_time__lte=now,
+        end_time__gte=now
+    ).exists()
+
     # 构建上下文
     context = {
         'vehicle': vehicle,
@@ -840,9 +849,11 @@ def exit_vehicle(request, vehicle_id):
         'exact_duration': round(exact_duration, 2),
         'fee': fee,
         'original_fee': original_fee,
+        'has_promotion': has_promotion,  # 添加促销活动标志
     }
 
     return render(request, 'payment_partial.html', context)
+
 
 # 支付处理API
 @csrf_protect

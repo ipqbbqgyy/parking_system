@@ -259,22 +259,25 @@ class Vehicle(models.Model):
             end_time__gte=self.entry_time
         )
 
-        # 应用促销折扣
-        if valid_promotions.exists():
-            promotion = valid_promotions.first()
-            try:
-                if promotion.discount_type == 'percent':
-                    # 百分比折扣
-                    discount = fee * (promotion.discount_value / Decimal('100'))
-                    fee -= discount
-                elif promotion.discount_type == 'fixed':
-                    # 固定金额减免
-                    fee -= promotion.discount_value
+        # 如果没有促销活动，直接返回原价
+        if not valid_promotions.exists():
+            return fee.quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
 
-                # 确保费用不低于0
-                fee = max(fee, Decimal('0.00'))
-            except Exception as e:
-                logger.error(f"应用促销时出错: {str(e)}")
+        # 应用促销折扣
+        promotion = valid_promotions.first()
+        try:
+            if promotion.discount_type == 'percent':
+                # 百分比折扣
+                discount = fee * (promotion.discount_value / Decimal('100'))
+                fee -= discount
+            elif promotion.discount_type == 'fixed':
+                # 固定金额减免
+                fee -= promotion.discount_value
+
+            # 确保费用不低于0
+            fee = max(fee, Decimal('0.00'))
+        except Exception as e:
+            logger.error(f"应用促销时出错: {str(e)}")
 
         # 四舍五入到2位小数
         return fee.quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)

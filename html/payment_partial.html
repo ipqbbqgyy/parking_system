@@ -7,7 +7,7 @@
     <p>出场时间: {{ now|date:"Y-m-d H:i:s" }}</p>
     <p>停车时长: {{ parking_duration }} 小时 (精确值: {{ exact_duration }})</p>
 
-    {% if original_fee != fee %}
+    {% if has_promotion and original_fee != fee %}
         <p>原价: <span style="text-decoration: line-through;">{{ original_fee|floatformat:2 }} 元</span></p>
         <p>优惠价: <span style="color: #f44336; font-weight: bold;">{{ fee|floatformat:2 }} 元</span></p>
     {% else %}

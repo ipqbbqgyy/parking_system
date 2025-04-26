@@ -243,10 +243,11 @@
     window.getFeedbackHistory = function() {
         const csrfToken = getCookie('csrftoken');
         const feedbackHistoryBtn = document.getElementById('feedbackHistoryBtn');
+        let originalText = '';
 
         if(feedbackHistoryBtn) {
+            originalText = feedbackHistoryBtn.textContent;
             feedbackHistoryBtn.disabled = true;
-            const originalText = feedbackHistoryBtn.textContent;
             feedbackHistoryBtn.textContent = '加载中...';
         }
 
