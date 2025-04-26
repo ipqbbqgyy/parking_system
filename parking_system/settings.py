@@ -93,43 +93,23 @@ WSGI_APPLICATION = 'parking_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',    # 数据库引擎
-#         'NAME': 'test', # 数据库名称
-#         'HOST': '127.0.0.1', # 数据库地址，本机 ip 地址 127.0.0.1
-#         'PORT': 3306, # 端口
-#         'USER': 'root',  # 数据库用户名
-#         'PASSWORD': '123456', # 数据库密码
-#     }
-# }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',  # SQLite 数据库文件路径
-#     }
-# }
-
-
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'parking_system',
-        'USER': 'root',
-        'PASSWORD': 'S20006172s',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            # 关键修改：使用新版认证方式
-            'auth_plugin_map': {
-                'mysql_native_password': None  # 让PyMySQL自动处理
-            }
-        }
+        'ENGINE': 'django.db.backends.mysql',    # 数据库引擎
+        'NAME': 'test', # 数据库名称
+        'HOST': '127.0.0.1', # 数据库地址，本机 ip 地址 127.0.0.1
+        'PORT': 3306, # 端口
+        'USER': 'root',  # 数据库用户名
+        'PASSWORD': '123456', # 数据库密码
     }
 }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # SQLite 数据库文件路径
+    }
+}
+
 
 
 # Password validation
