@@ -51,13 +51,13 @@ class CustomAdminSite(admin.AdminSite):
         """
         app_list = super().get_app_list(request)
 
-        # 找到Parking_App应用并添加用户反馈
+        # 找到parking_app应用并添加用户反馈
         for app in app_list:
-            if app['app_label'] == 'Parking_App':
+            if app['app_label'] == 'parking_app':
                 app['models'].append({
                     'name': '用户反馈',
                     'object_name': 'Feedback',
-                    'admin_url': '/admin/Parking_App/feedback/',
+                    'admin_url': '/admin/parking_app/feedback/',
                     'view_only': False,
                 })
                 break
@@ -421,8 +421,6 @@ class CustomAdminSite(admin.AdminSite):
 custom_admin_site = CustomAdminSite(name='custom_admin')
 
 
-
-
 # ==================== 以下是各个模型的Admin配置 ====================
 
 @admin.register(Promotion, site=custom_admin_site)
@@ -499,11 +497,47 @@ class VehicleAdmin(admin.ModelAdmin):
     """
     车辆管理配置
     """
-    list_display = ('license_plate', 'get_vehicle_type_display', 'entry_time',
-                    'exit_time', 'is_reserved', 'get_parking_duration',
-                    'display_fee', 'paid', 'user')
+    list_display = (
+        'order_number',  # 订单号（第一列显示）
+        'license_plate',  # 车牌号
+        'vehicle_type_display',  # 车辆类型（使用中文显示）
+        'entry_time',  # 入场时间
+        'exit_time',  # 出场时间
+        'payment_display',  # 支付金额（带人民币符号）
+        'paid',  # 支付状态
+        'user'  # 关联用户
+    )
     list_filter = ('vehicle_type', 'paid', 'reserved')
-    search_fields = ('license_plate', 'user__username')
+    search_fields = ('license_plate', 'user__username', 'order_number')
+
+    def vehicle_type_display(self, obj):
+        """显示中文车辆类型"""
+        return dict(Vehicle.VEHICLE_TYPE_CHOICES).get(obj.vehicle_type, '未知类型')
+    vehicle_type_display.short_description = '车辆类型'
+
+    def payment_display(self, obj):
+        """格式化支付金额显示"""
+        if obj.payment_amount:
+            return f"¥{obj.payment_amount:.2f}"
+        return "未支付"
+    payment_display.short_description = '支付金额'
+
+    def display_fee(self, obj):
+        """格式化显示费用"""
+        return f"{obj.fee:.2f}元"
+    display_fee.short_description = '费用'
+
+    def get_parking_duration(self, obj):
+        """计算并显示停车时长"""
+        if obj.exit_time:
+            return f"{obj.parking_duration_hours:.2f}小时"
+        return f"在场中 ({obj.parking_duration_minutes}分钟)"
+    get_parking_duration.short_description = '停车时长'
+
+    def is_reserved(self, obj):
+        """显示是否被预订"""
+        return "是" if obj.reserved else "否"
+    is_reserved.short_description = '是否被预订'
 
     def save_model(self, request, obj, form, change):
         action = '修改' if change else '创建'
@@ -522,29 +556,9 @@ class VehicleAdmin(admin.ModelAdmin):
             AdminActionLogger.log(request, 'delete', obj, message)
         super().delete_queryset(request, queryset)
 
-    def display_fee(self, obj):
-        """格式化显示费用"""
-        return f"{obj.fee:.2f}元"
-
-    display_fee.short_description = '费用'
-
-    def get_parking_duration(self, obj):
-        """计算并显示停车时长"""
-        if obj.exit_time:
-            return f"{obj.parking_duration_hours:.2f}小时"
-        return f"在场中 ({obj.parking_duration_minutes}分钟)"
-
-    get_parking_duration.short_description = '停车时长'
-
     def has_module_permission(self, request):
         """检查是否有权限访问此模块"""
         return request.user.is_active and request.user.is_superuser
-
-    def is_reserved(self, obj):
-        """显示是否被预订"""
-        return "是" if obj.reserved else "否"
-
-    is_reserved.short_description = '是否被预订'
 
 
 @admin.register(User, site=custom_admin_site)
@@ -678,47 +692,44 @@ class MembershipAdmin(admin.ModelAdmin):
         """检查是否有权限访问此模块"""
         return request.user.is_active and request.user.is_superuser
 
-    from django.contrib import admin
-    from .models import Feedback
 
-    @admin.register(Feedback, site=custom_admin_site)
-    class FeedbackAdmin(admin.ModelAdmin):
-        """用户反馈管理配置"""
-        list_display = ('user', 'get_feedback_type_display', 'content_short', 'created_at', 'is_resolved')
-        list_filter = ('feedback_type', 'is_resolved')
-        search_fields = ('content', 'user__username')
-        list_editable = ('is_resolved',)
-        readonly_fields = ('created_at',)
+@admin.register(Feedback, site=custom_admin_site)
+class FeedbackAdmin(admin.ModelAdmin):
+    """用户反馈管理配置"""
+    list_display = ('user', 'get_feedback_type_display', 'content_short', 'created_at', 'is_resolved')
+    list_filter = ('feedback_type', 'is_resolved')
+    search_fields = ('content', 'user__username')
+    list_editable = ('is_resolved',)
+    readonly_fields = ('created_at',)
 
-        fieldsets = (
-            (None, {
-                'fields': ('user', 'feedback_type', 'content', 'is_resolved')
-            }),
-            ('时间信息', {
-                'fields': ('created_at',),
-                'classes': ('collapse',)
-            }),
-        )
+    fieldsets = (
+        (None, {
+            'fields': ('user', 'feedback_type', 'content', 'is_resolved')
+        }),
+        ('时间信息', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )
 
-        def content_short(self, obj):
-            """显示内容的前50个字符"""
-            return obj.content[:50] + '...' if len(obj.content) > 50 else obj.content
+    def content_short(self, obj):
+        """显示内容的前50个字符"""
+        return obj.content[:50] + '...' if len(obj.content) > 50 else obj.content
+    content_short.short_description = '反馈内容'
 
-        content_short.short_description = '反馈内容'
+    def save_model(self, request, obj, form, change):
+        action = '修改' if change else '创建'
+        message = f'{action}用户反馈: {obj.user.username if obj.user else "匿名用户"}'
+        AdminActionLogger.log(request, 'update' if change else 'create', obj, message)
+        super().save_model(request, obj, form, change)
 
-        def save_model(self, request, obj, form, change):
-            action = '修改' if change else '创建'
-            message = f'{action}用户反馈: {obj.user.username if obj.user else "匿名用户"}'
-            AdminActionLogger.log(request, 'update' if change else 'create', obj, message)
-            super().save_model(request, obj, form, change)
+    def delete_model(self, request, obj):
+        message = f'删除用户反馈: {obj.user.username if obj.user else "匿名用户"}'
+        AdminActionLogger.log(request, 'delete', obj, message)
+        super().delete_model(request, obj)
 
-        def delete_model(self, request, obj):
-            message = f'删除用户反馈: {obj.user.username if obj.user else "匿名用户"}'
+    def delete_queryset(self, request, queryset):
+        for obj in queryset:
+            message = f'批量删除用户反馈: {obj.user.username if obj.user else "匿名用户"}'
             AdminActionLogger.log(request, 'delete', obj, message)
-            super().delete_model(request, obj)
-
-        def delete_queryset(self, request, queryset):
-            for obj in queryset:
-                message = f'批量删除用户反馈: {obj.user.username if obj.user else "匿名用户"}'
-                AdminActionLogger.log(request, 'delete', obj, message)
-            super().delete_queryset(request, queryset)
+        super().delete_queryset(request, queryset)

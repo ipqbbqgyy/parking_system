@@ -1,46 +1,85 @@
-{% extends "base.html" %}  <!-- 继承自 base.html -->
+{% extends "base.html" %}
 
-{% block title %}停车记录 - 凉心智慧停车系统{% endblock %}  <!-- 覆盖标题 -->
+{% block title %}停车记录 - 凉心智慧停车系统{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" type="text/css" href="/static/css/we.css">  <!-- 引入个人中心页面的 CSS -->
-    <link rel="stylesheet" type="text/css" href="/static/css/vehicle_history.css">  <!-- 引入个人中心页面的 CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/css/we.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/vehicle_history.css">
     <style>
-
+        /* 可以在这里添加额外的内联样式 */
     </style>
 {% endblock %}
 
 {% block content %}
-    <!-- 停车记录内容 -->
     <div class="profile-container">
-        <!-- 个人中心按钮 -->
         <div class="profile-actions">
-            <a href="/we/">返回个人中心</a>
+            <a href="/we/" class="back-button">
+                <i class="fas fa-arrow-left"></i> 返回个人中心
+            </a>
         </div>
 
         <div class="profile-header">
-            <h1>停车记录</h1>
+            <h1><i class="fas fa-history"></i> 停车记录</h1>
+            <p class="subtitle">查看您的历史停车信息</p>
         </div>
+
+<div class="vehicle-list-container">
+    {% if vehicles %}
+        <div class="list-header">
+            <div>订单号</div>
+            <div>车牌号</div>
+            <div>车辆类型</div>
+            <div>入场时间</div>
+            <div>出场时间</div>
+            <div>支付金额</div>
+        </div>
+
         <div class="vehicle-list">
-            <ul>
-                {% for vehicle in vehicles %}
-                    <li>
-                        <span>车牌号: {{ vehicle.license_plate }}</span>
-                        <span>车辆类型: {{ vehicle.vehicle_type }}</span>
-                        <span>入场时间: {{ vehicle.entry_time|date:"Y-m-d H:i:s" }}</span>
-                        <span>出场时间: {% if vehicle.exit_time %}{{ vehicle.exit_time|date:"Y-m-d H:i:s" }}{% else %}未出场{% endif %}</span>
-                    </li>
-                {% empty %}
-                    <li>暂无停车记录</li>
-                {% endfor %}
-            </ul>
+            {% for vehicle in vehicles %}
+                <div class="vehicle-card">
+                     <div class="order-number">
+                            {{ vehicle.order_number|default:"系统生成中..." }}
+                     </div>
+                    <div class="license-plate">
+                        <i class="fas fa-car"></i> {{ vehicle.license_plate }}
+                    </div>
+                    <div class="vehicle-type">
+                        {{ vehicle.vehicle_type_chinese }}
+                    </div>
+                    <div class="entry-time">
+                        <i class="fas fa-sign-in-alt"></i> {{ vehicle.entry_time|date:"Y-m-d H:i" }}
+                    </div>
+                    <div class="exit-time">
+                        {% if vehicle.exit_time %}
+                            <i class="fas fa-sign-out-alt"></i> {{ vehicle.exit_time|date:"Y-m-d H:i" }}
+                        {% else %}
+                            <span class="still-parking"><i class="fas fa-parking"></i> 未出场</span>
+                        {% endif %}
+                    </div>
+                    <div class="payment-amount {% if vehicle.paid %}paid{% else %}unpaid{% endif %}">
+                        {% if vehicle.paid %}
+                            <i class="fas fa-check-circle"></i> {{ vehicle.payment_amount|default:"0.00" }}元
+                        {% else %}
+                            <i class="fas fa-times-circle"></i> 未支付
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
         </div>
+    {% else %}
+        <div class="no-records">
+            <i class="fas fa-info-circle"></i>
+            <p>暂无停车记录</p>
+        </div>
+    {% endif %}
+</div>
     </div>
 
-    <!-- 返回顶部按钮 -->
-    <a href="#" class="back-to-top">返回顶部</a>
+    <a href="#" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+{% endblock %}
 
-    <!-- JavaScript 实现返回顶部功能 -->
-
- <script src="/static/js/vehicle_history.js"></script>
+{% block extra_js %}
+    <script src="/static/js/vehicle_history.js"></script>
 {% endblock %}

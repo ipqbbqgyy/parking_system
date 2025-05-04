@@ -5,7 +5,7 @@
     <p>车牌号: {{ vehicle.license_plate }}</p>
     <p>入场时间: {{ vehicle.entry_time|date:"Y-m-d H:i:s" }}</p>
     <p>出场时间: {{ now|date:"Y-m-d H:i:s" }}</p>
-    <p>停车时长: {{ parking_duration }} 小时 (精确值: {{ exact_duration }})</p>
+    <p>停车时长: {{ parking_duration }} 小时 (精确值: {{ exact_duration }}小时)</p>
 
     {% if has_promotion and original_fee != fee %}
         <p>原价: <span style="text-decoration: line-through;">{{ original_fee|floatformat:2 }} 元</span></p>

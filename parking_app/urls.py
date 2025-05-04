@@ -28,7 +28,8 @@ urlpatterns = [
     path('submit-contact-form/', views.submit_contact_form, name='submit_contact_form'),  # 提交联系表单的接口
     # 加入我们相关页面
     path('contact-us/', views.contact_us, name='contact_us'),  # 联系我们页面(备用)
-    path('join-us/', views.join_us, name='join_us'),  # 招聘信息列表页
+    path('join_us/', views.join_us, name='join_us'),  # 招聘信息列表页
+    # path('join_us/', views.join_us),  # 新增兼容路径
     path('job/<int:job_id>/', views.job_detail, name='job_detail'),  # 职位详情页
 
     # 用户认证相关路由

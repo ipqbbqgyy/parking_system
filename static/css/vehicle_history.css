@@ -1,94 +1,249 @@
-        /* 停车记录页面的自定义样式 */
-        .profile-container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            flex: 1; /* 确保内容区域占据剩余空间 */
-        }
+/* 主容器样式 */
+.profile-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
 
-        .profile-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
+/* 返回按钮样式 */
+.profile-actions {
+    margin-bottom: 1.5rem;
+}
 
-        .profile-header h1 {
-            font-size: 2rem;
-            color: #6a11cb;
-        }
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.6rem 1.2rem;
+    background: #6a11cb;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
 
-        /* 车辆信息样式 */
-        .vehicle-list {
-            margin-top: 2rem;
-        }
+.back-button:hover {
+    background: #4a0d9b;
+    transform: translateY(-2px);
+}
 
-        .vehicle-list h2 {
-            font-size: 1.5rem;
-            color: #6a11cb;
-            margin-bottom: 1rem;
-        }
+/* 标题区域 */
+.profile-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
 
-        .vehicle-list ul {
-            list-style: none;
-            padding: 0;
-        }
+.profile-header h1 {
+    font-size: 2.2rem;
+    color: #6a11cb;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
 
-        .vehicle-list ul li {
-            background: #f4f4f4;
-            padding: 1rem;
-            border-radius: 4px;
-            margin-bottom: 0.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.subtitle {
+    color: #666;
+    font-size: 1rem;
+}
 
-        .vehicle-list ul li span {
-            font-weight: bold;
-        }
+/* 列表容器 */
+.vehicle-list-container {
+    margin-top: 2rem;
+}
 
-        /* 用户名样式 */
-        .vehicle-list ul li .username {
-            color: #6a11cb;  /* 设置用户名颜色 */
-            font-weight: bold;  /* 设置用户名加粗 */
-        }
+/* 列表标题 */
+.list-header {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 1rem;
+}
 
-        /* 返回按钮样式 */
-        .profile-actions {
-            margin-top: 2rem;
-            text-align: center;
-        }
+/* 车辆卡片 */
+.vehicle-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
 
-        .profile-actions a {
-            margin: 0 1rem;
-            padding: 0.5rem 1rem;
-            background: #6a11cb;
-            color: #fff;
-            border-radius: 4px;
-            text-decoration: none;
-            transition: background 0.3s ease;
-        }
+.vehicle-card {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1.2rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    align-items: center;
+}
 
-        .profile-actions a:hover {
-            background: #4a0d9b;
-        }
+.vehicle-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
 
-        /* 返回顶部按钮样式 */
-        .back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 0.5rem 1rem;
-            background: #6a11cb;
-            color: #fff;
-            border-radius: 4px;
-            text-decoration: none;
-            transition: background 0.3s ease;
-            display: none; /* 默认隐藏 */
-        }
+/* 卡片内容样式 */
+.license-plate, .vehicle-type,
+.entry-time, .exit-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #444;
+}
 
-        .back-to-top:hover {
-            background: #4a0d9b;
-        }
+.license-plate {
+    font-weight: bold;
+    color: #6a11cb;
+}
+
+.still-parking {
+    color: #28a745;
+    font-weight: bold;
+}
+
+/* 无记录样式 */
+.no-records {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.no-records i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #6a11cb;
+}
+
+/* 返回顶部按钮 */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: #6a11cb;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-to-top:hover {
+    background: #4a0d9b;
+    transform: translateY(-3px);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .list-header {
+        display: none;
+    }
+
+    .vehicle-card {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+
+    .profile-container {
+        padding: 1.5rem;
+    }
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+/* 新增样式 */
+.order-number {
+    font-family: 'Courier New', monospace;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.payment-amount {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.payment-amount.paid {
+    color: #28a745;
+}
+
+.payment-amount.unpaid {
+    color: #dc3545;
+}
+
+/* 调整网格布局 */
+.list-header {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.vehicle-card {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .list-header {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .vehicle-card {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .vehicle-card > div::before {
+        content: attr(data-label);
+        font-weight: bold;
+        margin-right: 0.5rem;
+        color: #6a11cb;
+    }
+
+    .vehicle-card > div {
+        display: flex;
+    }
+
+    /* 为移动设备添加数据标签 */
+    .order-number::before { content: "订单号: "; }
+    .license-plate::before { content: "车牌号: "; }
+    .vehicle-type::before { content: "类型: "; }
+    .entry-time::before { content: "入场: "; }
+    .exit-time::before { content: "出场: "; }
+    .payment-amount::before { content: "金额: "; }
+}

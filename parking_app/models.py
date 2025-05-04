@@ -7,7 +7,14 @@ import logging
 from decimal import Decimal, ROUND_HALF_UP
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+import uuid
 
+# 获取当前模块的日志记录器
+logger = logging.getLogger(__name__)
+
+def generate_order_number():
+    """生成订单号的函数"""
+    return f"PARK-{uuid.uuid4().hex[:8].upper()}"
 
 class Feedback(models.Model):
     """用户反馈模型"""
@@ -31,13 +38,6 @@ class Feedback(models.Model):
 
     def __str__(self):
         return f"{self.get_feedback_type_display()} - {self.user.username if self.user else '匿名用户'}"
-
-
-
-
-# 获取当前模块的日志记录器
-logger = logging.getLogger(__name__)
-
 
 class AdminActionLogger:
     """管理员操作日志记录器，用于记录管理员的各种操作"""
@@ -80,7 +80,6 @@ class AdminActionLogger:
             # 记录错误日志
             logger.error(f"记录管理员操作时出错: {str(e)}", exc_info=True)
 
-
 class Promotion(models.Model):
     """促销活动模型，用于管理停车场的促销折扣活动"""
 
@@ -121,7 +120,6 @@ class Promotion(models.Model):
         """对象字符串表示"""
         return f"{self.name} ({self.start_time.date()} 至 {self.end_time.date()})"
 
-
 class Vehicle(models.Model):
     """车辆模型，用于管理停车场中的车辆信息"""
 
@@ -150,6 +148,34 @@ class Vehicle(models.Model):
     reservation_use_time = models.DateTimeField(null=True, blank=True, verbose_name='预定使用时间')  # 预定使用时间
     reservation_expiry_time = models.DateTimeField(null=True, blank=True, verbose_name='预定过期时间')  # 预定过期时间
     fee = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='费用')  # 停车费用
+    order_number = models.CharField(
+        max_length=50,
+        unique=True,
+        blank=True,
+        null=True,
+        verbose_name='订单号',
+        default=generate_order_number  # 使用函数而不是lambda
+    )
+    payment_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        verbose_name='支付金额'
+    )
+
+    def save(self, *args, **kwargs):
+        """保存模型时自动生成订单号和计算费用"""
+        if not self.order_number:
+            self.order_number = generate_order_number()
+        if self.exit_time:
+            self.fee = self.calculate_fee()
+        super().save(*args, **kwargs)
+
+    def generate_order_number(self):
+        """生成订单号"""
+        if not self.order_number:
+            self.order_number = generate_order_number()
+        return self.order_number
 
     # 常量定义
     FREE_DURATION_MINUTES = 5  # 免费停车时长(分钟)
@@ -234,7 +260,8 @@ class Vehicle(models.Model):
         """计算实际停车费用(考虑会员和促销活动)"""
         # 如果是会员且会员有效，费用为0
         if hasattr(self.user, 'membership') and self.user.membership.is_active():
-            return Decimal('0.00')
+            self.payment_amount = Decimal('0.00')
+            return self.payment_amount
 
         if not self.entry_time:
             return Decimal('0.00')
@@ -280,13 +307,8 @@ class Vehicle(models.Model):
             logger.error(f"应用促销时出错: {str(e)}")
 
         # 四舍五入到2位小数
-        return fee.quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
-
-    def save(self, *args, **kwargs):
-        """保存模型时自动计算费用"""
-        if self.exit_time:
-            self.fee = self.calculate_fee()
-        super().save(*args, **kwargs)
+        self.payment_amount = fee.quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
+        return self.payment_amount
 
     @staticmethod
     def clean_expired_reservations():
@@ -305,7 +327,6 @@ class Vehicle(models.Model):
         """对象字符串表示"""
         return self.license_plate
 
-
 def calculate_original_fee(parking_duration_hours, hourly_rate=Decimal('5')):
     """
     独立函数：计算原始停车费用
@@ -319,7 +340,6 @@ def calculate_original_fee(parking_duration_hours, hourly_rate=Decimal('5')):
     """
     fee = Decimal(str(parking_duration_hours)) * hourly_rate
     return fee.quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
-
 
 class User(AbstractUser):
     """自定义用户模型，扩展了Django的AbstractUser"""
@@ -344,7 +364,6 @@ class User(AbstractUser):
         if self.password and not self.password.startswith('pbkdf2_sha256$'):
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
-
 
 class Membership(models.Model):
     """会员模型，用于管理用户的会员资格"""
@@ -381,7 +400,6 @@ class Membership(models.Model):
         """对象字符串表示"""
         return f"{self.user.username} - {self.get_membership_type_display()}"
 
-
 class ContactMessage(models.Model):
     """联系消息模型，用于存储用户提交的联系信息"""
 
@@ -395,7 +413,6 @@ class ContactMessage(models.Model):
         # 元数据配置
         verbose_name = "招商合作"  # 单数名称
         verbose_name_plural = "招商合作"  # 复数名称
-
 
 class JobPosition(models.Model):
     """职位模型，用于管理招聘职位信息"""
@@ -411,7 +428,6 @@ class JobPosition(models.Model):
         # 元数据配置
         verbose_name = "职位发布"  # 单数名称
         verbose_name_plural = "职位发布"  # 复数名称
-
 
 class AdminLogEntry(models.Model):
     """管理员日志条目模型，用于记录管理员操作"""

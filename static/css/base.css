@@ -243,3 +243,19 @@ a {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* 备案信息样式 */
+.footer .beian-info {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.footer .beian-info a {
+    color: white !important;
+    text-decoration: none;
+}
+
+.footer .beian-info a:hover {
+    text-decoration: underline;
+}
+
