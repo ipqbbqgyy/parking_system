@@ -740,8 +740,11 @@ def reserve_spot(request):
         use_time = timezone.make_aware(use_time)  # 转换为带时区的datetime对象
         use_time = timezone.localtime(use_time)  # 转换为本地时间
 
-        # 计算过期时间(使用时间 + 15分钟)
-        expiry_time = use_time + timezone.timedelta(minutes=15)
+        # 从数据库获取预订过期时间(分钟)
+        expiry_minutes = Vehicle.get_reservation_expiry_minutes()
+
+        # 计算过期时间(使用时间 + 过期分钟数)
+        expiry_time = use_time + timezone.timedelta(minutes=expiry_minutes)
 
         # 创建预订记录
         try:
@@ -752,7 +755,7 @@ def reserve_spot(request):
                 spot_number=spot_number,
                 reserved=True,
                 reservation_time=timezone.now(),  # 当前时间
-                reservation_use_time=use_time,    # 预订使用时间
+                reservation_use_time=use_time,  # 预订使用时间
                 reservation_expiry_time=expiry_time  # 过期时间
             )
             return JsonResponse({
@@ -763,6 +766,7 @@ def reserve_spot(request):
         except Exception as e:
             return JsonResponse({"success": False, "message": f"发生错误：{str(e)}"})
     return JsonResponse({"success": False, "message": "无效的请求方法"})
+
 
 # 使用预订车位API
 @login_required
