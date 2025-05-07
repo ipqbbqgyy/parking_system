@@ -4,17 +4,66 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 import logging
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 import uuid
-
+from datetime import timedelta
+from django.utils import timezone
 # 获取当前模块的日志记录器
 logger = logging.getLogger(__name__)
+
 
 def generate_order_number():
     """生成订单号的函数"""
     return f"PARK-{uuid.uuid4().hex[:8].upper()}"
+
+
+class ParkingConfig(models.Model):
+    """停车系统配置模型"""
+    CONFIG_CHOICES = [
+        ('hourly_rate', '每小时费率(元)'),
+        ('free_duration', '免费停车时长(分钟)'),
+        ('reservation_expiry', '预订过期时间(分钟)'),
+    ]
+
+    config_type = models.CharField(
+        max_length=20,
+        choices=CONFIG_CHOICES,
+        unique=True,
+        verbose_name="配置类型"
+    )
+    value = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="配置值"
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name="配置说明"
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name="更新时间"
+    )
+
+    class Meta:
+        verbose_name = "停车系统配置"
+        verbose_name_plural = "停车系统配置"
+        ordering = ['config_type']
+
+    def __str__(self):
+        return f"{self.get_config_type_display()}: {self.value}"
+
+    @classmethod
+    def get_config(cls, config_type, default=0):
+        """获取配置值"""
+        try:
+            config = cls.objects.get(config_type=config_type)
+            return config.value
+        except cls.DoesNotExist:
+            return Decimal(default)
+
 
 class Feedback(models.Model):
     """用户反馈模型"""
@@ -38,6 +87,7 @@ class Feedback(models.Model):
 
     def __str__(self):
         return f"{self.get_feedback_type_display()} - {self.user.username if self.user else '匿名用户'}"
+
 
 class AdminActionLogger:
     """管理员操作日志记录器，用于记录管理员的各种操作"""
@@ -80,6 +130,7 @@ class AdminActionLogger:
             # 记录错误日志
             logger.error(f"记录管理员操作时出错: {str(e)}", exc_info=True)
 
+
 class Promotion(models.Model):
     """促销活动模型，用于管理停车场的促销折扣活动"""
 
@@ -119,6 +170,7 @@ class Promotion(models.Model):
     def __str__(self):
         """对象字符串表示"""
         return f"{self.name} ({self.start_time.date()} 至 {self.end_time.date()})"
+
 
 class Vehicle(models.Model):
     """车辆模型，用于管理停车场中的车辆信息"""
@@ -177,9 +229,20 @@ class Vehicle(models.Model):
             self.order_number = generate_order_number()
         return self.order_number
 
-    # 常量定义
-    FREE_DURATION_MINUTES = 5  # 免费停车时长(分钟)
-    HOURLY_RATE = Decimal('5')  # 每小时停车费率(元)
+    @classmethod
+    def get_hourly_rate(cls):
+        """从数据库获取每小时费率"""
+        return ParkingConfig.get_config('hourly_rate', 5.00)
+
+    @classmethod
+    def get_free_duration_minutes(cls):
+        """从数据库获取免费停车时长"""
+        return int(ParkingConfig.get_config('free_duration', 5))
+
+    @classmethod
+    def get_reservation_expiry_minutes(cls):
+        """从数据库获取预订过期时间"""
+        return int(ParkingConfig.get_config('reservation_expiry', 15))
 
     def get_vehicle_type_display(self):
         """获取车辆类型的显示名称"""
@@ -247,12 +310,12 @@ class Vehicle(models.Model):
         if duration_hours is None:
             duration_minutes = self.parking_duration_minutes
             # 如果停车时间在免费时长内，费用为0
-            if duration_minutes <= self.FREE_DURATION_MINUTES:
+            if duration_minutes <= self.get_free_duration_minutes():
                 return Decimal('0.00')
             duration_hours = Decimal(str(duration_minutes)) / Decimal('60')
 
         # 计算费用 = 时长 × 小时费率
-        fee = Decimal(str(duration_hours)) * self.HOURLY_RATE
+        fee = Decimal(str(duration_hours)) * self.get_hourly_rate()
         # 四舍五入到2位小数
         return fee.quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
 
@@ -269,11 +332,11 @@ class Vehicle(models.Model):
         duration_minutes = self.parking_duration_minutes
 
         # 如果停车时间在免费时长内，费用为0
-        if duration_minutes <= self.FREE_DURATION_MINUTES:
+        if duration_minutes <= self.get_free_duration_minutes():
             return Decimal('0.00')
 
         # 计算分钟费率
-        minute_rate = self.HOURLY_RATE / Decimal('60')
+        minute_rate = self.get_hourly_rate() / Decimal('60')
         fee = Decimal(str(duration_minutes)) * minute_rate
 
         now = timezone.now()
@@ -313,9 +376,11 @@ class Vehicle(models.Model):
     @staticmethod
     def clean_expired_reservations():
         """清理过期的车辆预订"""
+        expiry_minutes = Vehicle.get_reservation_expiry_minutes()
+        expiry_time = timezone.now() - timedelta(minutes=expiry_minutes)
         Vehicle.objects.filter(
             reserved=True,
-            reservation_expiry_time__lt=timezone.now()
+            reservation_expiry_time__lt=expiry_time
         ).delete()
 
     class Meta:
@@ -326,6 +391,7 @@ class Vehicle(models.Model):
     def __str__(self):
         """对象字符串表示"""
         return self.license_plate
+
 
 def calculate_original_fee(parking_duration_hours, hourly_rate=Decimal('5')):
     """
@@ -340,6 +406,7 @@ def calculate_original_fee(parking_duration_hours, hourly_rate=Decimal('5')):
     """
     fee = Decimal(str(parking_duration_hours)) * hourly_rate
     return fee.quantize(Decimal('0.00'), rounding=ROUND_HALF_UP)
+
 
 class User(AbstractUser):
     """自定义用户模型，扩展了Django的AbstractUser"""
@@ -364,6 +431,7 @@ class User(AbstractUser):
         if self.password and not self.password.startswith('pbkdf2_sha256$'):
             self.password = make_password(self.password)
         super().save(*args, **kwargs)
+
 
 class Membership(models.Model):
     """会员模型，用于管理用户的会员资格"""
@@ -400,6 +468,7 @@ class Membership(models.Model):
         """对象字符串表示"""
         return f"{self.user.username} - {self.get_membership_type_display()}"
 
+
 class ContactMessage(models.Model):
     """联系消息模型，用于存储用户提交的联系信息"""
 
@@ -413,6 +482,7 @@ class ContactMessage(models.Model):
         # 元数据配置
         verbose_name = "招商合作"  # 单数名称
         verbose_name_plural = "招商合作"  # 复数名称
+
 
 class JobPosition(models.Model):
     """职位模型，用于管理招聘职位信息"""
@@ -428,6 +498,7 @@ class JobPosition(models.Model):
         # 元数据配置
         verbose_name = "职位发布"  # 单数名称
         verbose_name_plural = "职位发布"  # 复数名称
+
 
 class AdminLogEntry(models.Model):
     """管理员日志条目模型，用于记录管理员操作"""
@@ -475,3 +546,28 @@ class AdminLogEntry(models.Model):
     def get_action_display(self):
         """获取操作类型的显示名称"""
         return self.ACTION_DISPLAY.get(self.action, self.action)
+
+
+def initialize_parking_configs():
+    """初始化停车系统默认配置"""
+    ParkingConfig.objects.update_or_create(
+        config_type='hourly_rate',
+        defaults={
+            'value': '5.00',
+            'description': '每小时停车费用(元)'
+        }
+    )
+    ParkingConfig.objects.update_or_create(
+        config_type='free_duration',
+        defaults={
+            'value': '5',
+            'description': '免费停车时长(分钟)'
+        }
+    )
+    ParkingConfig.objects.update_or_create(
+        config_type='reservation_expiry',
+        defaults={
+            'value': '15',
+            'description': '预订车位过期时间(分钟)'
+        }
+    )

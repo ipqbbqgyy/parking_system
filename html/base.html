@@ -32,11 +32,15 @@
             <li><a href="/join_us/">加入我们</a></li>
             <li><a href="/help/">帮助中心</a></li>
         </ul>
-        <ul>
-            <li><a href="/we/">个人中心</a></li>
-            <li><a href="/login/">登录</a></li>
-            <li><a href="/register/">注册</a></li>
-        </ul>
+<ul>
+    {% if user.is_authenticated %}
+        <li><a href="/we/">个人中心</a></li>
+        <li><a href="{% url 'logout' %}">退出</a></li>
+    {% else %}
+        <li><a href="/login/">登录</a></li>
+        <li><a href="/register/">注册</a></li>
+    {% endif %}
+</ul>
     </nav>
 
     <!-- 内容区域 -->
