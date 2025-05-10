@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -6,11 +7,13 @@
     <title>{% block title %}凉心科技后台管理系统{% endblock %}</title>
 
     <!-- 引用外部CSS -->
+    <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png">
+    <link rel="shortcut icon" href="{% static 'img/logo.png' %}">
     <link rel="stylesheet" type="text/css" href="/static/css/admin/basetwo.css">
     {% block extra_css %}{% endblock %}
 
     <!-- 引用Chart.js -->
-    <script src="/static/chart2/chart.min.js/"></script>
+    <script src="/static/chart2/chart.min.js"></script>
 </head>
 <body>
     <!-- 顶部导航栏 -->
