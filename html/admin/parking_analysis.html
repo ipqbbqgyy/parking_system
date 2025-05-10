@@ -6,6 +6,16 @@
     <div class="module">
         <h1>停车场数据分析系统</h1>
 
+        <!-- 添加时间范围选择器 -->
+        <div class="time-range-selector">
+            <button class="time-range-btn active" data-range="today">今日</button>
+            <button class="time-range-btn" data-range="week">本周</button>
+            <button class="time-range-btn" data-range="month">本月</button>
+            <button class="time-range-btn" data-range="quarter">本季度</button>
+            <button class="time-range-btn" data-range="year">本年</button>
+            <button class="time-range-btn" data-range="all">全部</button>
+        </div>
+
         <div class="stats-container">
             <div class="stat-card">
                 <h3>总停车次数</h3>
@@ -47,9 +57,12 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="/static/css/admin/parking_analysis.css">
+<style>
+
+</style>
 {% endblock %}
 
 {% block extra_js %}
-<script src="/static/chart/chart.min.js"></script>
+
 <script src="/static/js/admin/parking_analysis.js"></script>
 {% endblock %}

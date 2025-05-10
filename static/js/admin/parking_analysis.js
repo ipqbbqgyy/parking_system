@@ -1,47 +1,108 @@
 // 全局配置
 const config = {
     areaChart: null,
-    durationChart: null
+    durationChart: null,
+    currentRange: 'today' // 默认显示今天的数据
 };
 
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', function() {
     // 初始化统计卡片动画
+    initStatCards();
+
+    // 绑定时间范围按钮事件
+    initTimeRangeButtons();
+
+    // 初始加载数据
+    fetchParkingData();
+});
+
+// 初始化统计卡片动画
+function initStatCards() {
     const statCards = document.querySelectorAll('.stat-card');
     statCards.forEach((card, index) => {
         setTimeout(() => {
             card.classList.add('show');
         }, index * 200);
     });
+}
 
-    fetchParkingData();
-});
+// 初始化时间范围按钮
+function initTimeRangeButtons() {
+    document.querySelectorAll('.time-range-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // 更新按钮状态
+            document.querySelectorAll('.time-range-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            // 更新当前时间范围并重新获取数据
+            config.currentRange = this.dataset.range;
+            fetchParkingData();
+        });
+    });
+}
 
 // 从API获取停车数据
 function fetchParkingData() {
-    fetch('/admin/parking_analysis/data/')
+    showLoadingState(true);
+
+    fetch(`/admin/parking_analysis/data/?period=${config.currentRange}`)
         .then(response => {
-            if (!response.ok) {
-                throw new Error('网络响应不正常，状态码: ' + response.status);
-            }
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             return response.json();
         })
         .then(data => {
-            if (data && data.success && data.vehicles && data.vehicles.length > 0) {
-                processData(data.vehicles);
+            if (data?.success) {
+                if (data.vehicles?.length > 0) {
+                    processData(data.vehicles);
+                } else {
+                    showNoDataMessage();
+                }
             } else {
-                showNoDataMessage();
+                throw new Error('Invalid data format');
             }
         })
         .catch(error => {
             console.error('获取数据错误:', error);
             useSampleData();
+        })
+        .finally(() => {
+            showLoadingState(false);
         });
+}
+
+// 显示/隐藏加载状态
+function showLoadingState(show) {
+    const loadingElement = document.getElementById('loadingIndicator') || createLoadingElement();
+    loadingElement.style.display = show ? 'block' : 'none';
+}
+
+// 创建加载指示器元素
+function createLoadingElement() {
+    const loader = document.createElement('div');
+    loader.id = 'loadingIndicator';
+    loader.style.display = 'none';
+    loader.style.position = 'fixed';
+    loader.style.top = '50%';
+    loader.style.left = '50%';
+    loader.style.transform = 'translate(-50%, -50%)';
+    loader.style.padding = '15px';
+    loader.style.background = 'rgba(0,0,0,0.7)';
+    loader.style.color = 'white';
+    loader.style.borderRadius = '5px';
+    loader.style.zIndex = '1000';
+    loader.textContent = '数据加载中...';
+    document.body.appendChild(loader);
+    return loader;
 }
 
 // 处理数据
 function processData(vehicles) {
     try {
+        hideNoDataMessages();
+
         // 处理每辆车的数据
         const processedData = vehicles.map(vehicle => {
             const entryTime = new Date(vehicle.entry_time);
@@ -53,7 +114,8 @@ function processData(vehicles) {
                 Math.round((new Date() - entryTime) / (1000 * 60));
 
             // 提取区域 (A, B, C, D, E)
-            const area = vehicle.spot_number ? vehicle.spot_number.charAt(0).toUpperCase() : '未知';
+            const area = vehicle.spot_number ?
+                vehicle.spot_number.charAt(0).toUpperCase() : '未知';
 
             return {
                 license_plate: vehicle.license_plate,
@@ -94,13 +156,21 @@ function calculateStatistics(data) {
         Math.min(...exitedVehicles.map(v => v.duration)) : 0;
 
     // 更新统计卡片
-    document.getElementById('totalCount').textContent = totalCount;
-    document.getElementById('avgDuration').textContent = exitedVehicles.length > 0 ?
-        `${avgDuration.toFixed(1)} 分钟` : '暂无';
-    document.getElementById('maxDuration').textContent = exitedVehicles.length > 0 ?
-        `${maxDuration} 分钟` : '暂无';
-    document.getElementById('minDuration').textContent = exitedVehicles.length > 0 ?
-        `${minDuration} 分钟` : '暂无';
+    updateStatCard('totalCount', totalCount);
+    updateStatCard('avgDuration', exitedVehicles.length > 0 ? `${avgDuration} 分钟` : '暂无');
+    updateStatCard('maxDuration', exitedVehicles.length > 0 ? `${maxDuration} 分钟` : '暂无');
+    updateStatCard('minDuration', exitedVehicles.length > 0 ? `${minDuration} 分钟` : '暂无');
+}
+
+// 更新统计卡片
+function updateStatCard(elementId, value) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.textContent = value;
+        // 添加动画效果
+        element.classList.add('stat-updated');
+        setTimeout(() => element.classList.remove('stat-updated'), 500);
+    }
 }
 
 // 渲染图表
@@ -204,6 +274,15 @@ function renderAreaChart(data) {
                         text: '停车区域'
                     }
                 }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: `各区域停车数量分布 (${getRangeTitle(config.currentRange)})`,
+                    font: {
+                        size: 16
+                    }
+                }
             }
         }
     });
@@ -250,9 +329,34 @@ function renderDurationChart(data) {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: true,
+                    text: `停车时长分布 (${getRangeTitle(config.currentRange)})`,
+                    font: {
+                        size: 16
+                    }
+                },
+                legend: {
+                    position: 'right'
+                }
+            }
         }
     });
+}
+
+// 获取时间范围标题
+function getRangeTitle(range) {
+    const titles = {
+        'today': '今日',
+        'week': '本周',
+        'month': '本月',
+        'quarter': '本季度',
+        'year': '本年',
+        'all': '全部'
+    };
+    return titles[range] || range;
 }
 
 // 显示无数据消息
@@ -261,36 +365,47 @@ function showNoDataMessage() {
     document.getElementById('noDurationData').style.display = 'block';
 }
 
+// 隐藏无数据消息
+function hideNoDataMessages() {
+    document.getElementById('noChartData').style.display = 'none';
+    document.getElementById('noDurationData').style.display = 'none';
+}
+
 // 使用模拟数据
 function useSampleData() {
     console.log('使用模拟数据进行展示');
+    hideNoDataMessages();
 
-    const sampleData = {
-        vehicles: [
-            {
-                license_plate: "京A23456",
-                spot_number: "B1",
-                entry_time: "2025-03-28T09:09:46",
-                exit_time: "2025-03-28T09:12:15"
-            },
-            {
-                license_plate: "京A98765",
-                spot_number: "C2",
-                entry_time: "2025-03-28T09:10:08",
-                exit_time: "2025-03-28T09:12:34"
-            },
-            {
-                license_plate: "京P00000",
-                spot_number: "D3",
-                entry_time: "2025-03-28T09:10:18",
-                exit_time: null
-            }
-        ]
-    };
+    // 生成模拟数据
+    const sampleData = generateSampleData();
+    processData(sampleData);
+}
 
-    if (sampleData.vehicles && sampleData.vehicles.length > 0) {
-        processData(sampleData.vehicles);
-    } else {
-        showNoDataMessage();
+// 生成模拟数据
+function generateSampleData() {
+    const now = new Date();
+    const sampleVehicles = [];
+    const areas = ['A', 'B', 'C', 'D', 'E'];
+
+    // 生成20条模拟数据
+    for (let i = 0; i < 20; i++) {
+        const area = areas[Math.floor(Math.random() * areas.length)];
+        const entryTime = new Date(now);
+        entryTime.setHours(now.getHours() - Math.floor(Math.random() * 24));
+        entryTime.setMinutes(now.getMinutes() - Math.floor(Math.random() * 60));
+
+        const exitTime = new Date(entryTime);
+        exitTime.setHours(entryTime.getHours() + Math.floor(Math.random() * 5));
+        exitTime.setMinutes(entryTime.getMinutes() + Math.floor(Math.random() * 60));
+
+        sampleVehicles.push({
+            license_plate: `京A${Math.floor(1000 + Math.random() * 9000)}`,
+            spot_number: `${area}${Math.floor(1 + Math.random() * 50)}`,
+            entry_time: entryTime.toISOString(),
+            exit_time: exitTime.toISOString(),
+            duration: Math.round((exitTime - entryTime) / (1000 * 60))
+        });
     }
+
+    return sampleVehicles;
 }

@@ -194,10 +194,60 @@ class CustomAdminSite(admin.AdminSite):
         return render(request, 'admin/admin_logs.html')
 
     def get_parking_data(self, request):
-        self.log_action(request, 'view', message="获取车辆数据")
+        self.log_action(request, "view", message="获取车辆数据")
         if not (request.user.is_superuser or request.user.is_staff):
             return JsonResponse({'success': False, 'error': '没有访问权限'}, status=403)
-        vehicles = Vehicle.objects.all().order_by('-entry_time')[:100]
+
+        period = request.GET.get('period', 'today')
+        now = timezone.now()
+
+        # 根据选择的时间范围过滤数据
+        if period == 'today':
+            start_date = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            end_date = now.replace(hour=23, minute=59, second=59, microsecond=999999)
+            vehicles = Vehicle.objects.filter(
+                entry_time__gte=start_date,
+                entry_time__lte=end_date
+            ).order_by('-entry_time')
+        elif period == 'week':
+            start_date = now - timedelta(days=now.weekday())
+            start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
+            end_date = start_date + timedelta(days=6)
+            end_date = end_date.replace(hour=23, minute=59, second=59, microsecond=999999)
+            vehicles = Vehicle.objects.filter(
+                entry_time__gte=start_date,
+                entry_time__lte=end_date
+            ).order_by('-entry_time')
+        elif period == 'month':
+            start_date = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            end_date = start_date + timedelta(days=32)
+            end_date = end_date.replace(day=1) - timedelta(days=1)
+            end_date = end_date.replace(hour=23, minute=59, second=59, microsecond=999999)
+            vehicles = Vehicle.objects.filter(
+                entry_time__gte=start_date,
+                entry_time__lte=end_date
+            ).order_by('-entry_time')
+        elif period == 'quarter':
+            current_quarter = (now.month - 1) // 3 + 1
+            start_date = now.replace(month=(current_quarter - 1) * 3 + 1, day=1,
+                                     hour=0, minute=0, second=0, microsecond=0)
+            end_date = start_date + timedelta(days=93)
+            end_date = end_date.replace(day=1) - timedelta(days=1)
+            end_date = end_date.replace(hour=23, minute=59, second=59, microsecond=999999)
+            vehicles = Vehicle.objects.filter(
+                entry_time__gte=start_date,
+                entry_time__lte=end_date
+            ).order_by('-entry_time')
+        elif period == 'year':
+            start_date = now.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+            end_date = now.replace(month=12, day=31, hour=23, minute=59, second=59, microsecond=999999)
+            vehicles = Vehicle.objects.filter(
+                entry_time__gte=start_date,
+                entry_time__lte=end_date
+            ).order_by('-entry_time')
+        else:  # all
+            vehicles = Vehicle.objects.all().order_by('-entry_time')
+
         data = {
             'success': True,
             'vehicles': [
