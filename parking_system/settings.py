@@ -33,17 +33,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wkpt+^8m^2p&u5z(wjw80rm+d$&)je(i$v-mdm%!5in+1k%ds='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 
 # 允许本地测试的域名
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 # 开发环境跨域设置
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:8000",
-    "http://localhost:8000"
-]
+
 
 # 仅开发环境使用的配置
 DEBUG = True
