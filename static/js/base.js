@@ -53,9 +53,9 @@ function initChatBot() {
         },
         auth: {
             type: 'token',
-            token: 'pat_4zqDq4rpkBkNeKODkEcpi9z5uztmBO3nwlxIYs3NjYQTs9Zg2fujawMr0athRKYz',
+            token: 'pat_0iTlcFnq0cPKx8S3VV7SozuB8yD0X5AiTaOQvjN020mfrbuTLbj00HyrBcjTdVct',
             onRefreshToken: function() {
-                return 'pat_4zqDq4rpkBkNeKODkEcpi9z5uztmBO3nwlxIYs3NjYQTs9Zg2fujawMr0athRKYz';
+                return 'pat_0iTlcFnq0cPKx8S3VV7SozuB8yD0X5AiTaOQvjN020mfrbuTLbj00HyrBcjTdVct';
             }
         },
         onReady: function() {

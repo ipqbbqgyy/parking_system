@@ -58,7 +58,8 @@ def feedback_history(request):
             return JsonResponse({'success': False, 'message': str(e)})
     return JsonResponse({'success': False, 'message': '无效的请求方法'})
 
-#反馈信息
+
+# 反馈信息
 def submit_feedback(request):
     if request.method == 'POST':
         try:
@@ -74,99 +75,101 @@ def submit_feedback(request):
     return JsonResponse({'success': False, 'message': '无效的请求方法'})
 
 
-
 # 收入数据API视图（仅限超级用户访问）
 @user_passes_test(lambda u: u.is_superuser)
 @csrf_exempt
 def income_data(request):
-    # 获取查询时间段参数，默认为今天
-    period = request.GET.get('period', 'today')
-    # 获取当前时区（Asia/Shanghai）
-    tz = timezone.get_current_timezone()  
+    """修复后的收入数据API视图"""
+    try:
+        period = request.GET.get('period', 'today')
+        tz = timezone.get_current_timezone()
+        now_local = timezone.localtime(timezone.now())
 
-    # 获取当前本地时间并计算查询范围
-    now_local = timezone.localtime(timezone.now())
-    if period == 'today':
-        # 今天开始时间（00:00:00）
-        start_date = now_local.replace(hour=0, minute=0, second=0, microsecond=0)
-    elif period == 'week':
-        # 本周开始时间（周一00:00:00）
-        start_date = now_local - timedelta(days=now_local.weekday())
-        start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
-    elif period == 'month':
-        # 本月第一天开始时间
-        start_date = now_local.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    elif period == 'quarter':
-        # 当前季度的第一天
-        current_quarter = (now_local.month - 1) // 3 + 1
-        start_date = now_local.replace(month=(current_quarter - 1) * 3 + 1, day=1,
-                                     hour=0, minute=0, second=0, microsecond=0)
-    elif period == 'year':
-        # 本年第一天
-        start_date = now_local.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
-    else:  # all
-        # 所有时间段
-        start_date = None
+        # 获取时间范围
+        if period == 'today':
+            start_date = now_local.replace(hour=0, minute=0, second=0, microsecond=0)
+        elif period == 'week':
+            start_date = now_local - timedelta(days=now_local.weekday())
+            start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
+        elif period == 'month':
+            start_date = now_local.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        elif period == 'quarter':
+            current_quarter = (now_local.month - 1) // 3 + 1
+            start_date = now_local.replace(month=(current_quarter - 1) * 3 + 1, day=1,
+                                           hour=0, minute=0, second=0, microsecond=0)
+        elif period == 'year':
+            start_date = now_local.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+        else:
+            start_date = None
 
-    # 构建查询条件：已支付且已出库的车辆
-    query = Vehicle.objects.filter(paid=True)
-    if start_date:
-        # 将本地时间转换为UTC时间
-        start_date_utc = timezone.make_naive(start_date, tz).astimezone(timezone.utc)
-        query = query.filter(exit_time__gte=start_date_utc)
+        # 查询条件：已支付且已出库的车辆
+        query = Vehicle.objects.filter(paid=True, exit_time__isnull=False)
+        if start_date:
+            start_date_utc = timezone.make_naive(start_date, tz).astimezone(timezone.utc)
+            query = query.filter(exit_time__gte=start_date_utc)
 
-    # 处理记录数据（转换为本地时间）
-    records = []
-    for vehicle in query.order_by('-exit_time')[:20]:
-        # 将UTC时间转换为本地时间
-        local_time = timezone.localtime(vehicle.exit_time)
-        records.append({
-            'date': local_time.strftime('%Y-%m-%d %H:%M'),  # 格式化本地时间
-            'license_plate': vehicle.license_plate,
-            'duration': vehicle.parking_duration,
-            'amount': float(vehicle.calculate_fee()),
-            'is_member': hasattr(vehicle.user, 'membership') and vehicle.user.membership.is_active()
+        # 处理记录数据
+        records = []
+        for vehicle in query.order_by('-exit_time')[:20]:
+            local_time = timezone.localtime(vehicle.exit_time)
+            records.append({
+                'date': local_time.strftime('%Y-%m-%d %H:%M'),
+                'license_plate': vehicle.license_plate,
+                'duration': vehicle.parking_duration,
+                'amount': float(vehicle.calculate_fee()),
+                'is_member': hasattr(vehicle.user, 'membership') and vehicle.user.membership.is_active()
+            })
+
+        # 修复趋势数据处理
+        trend_data = {'labels': [], 'amounts': []}
+
+        if period == 'today':
+            # 按小时统计（修复后的逻辑）
+            hours = {h: 0.0 for h in range(24)}
+            for v in query:
+                if v.exit_time:  # 确保exit_time不为None
+                    local_hour = timezone.localtime(v.exit_time).hour
+                    hours[local_hour] += float(v.calculate_fee())
+            trend_data['labels'] = [f"{h:02d}:00" for h in range(24)]
+            trend_data['amounts'] = [hours[h] for h in range(24)]
+
+        elif period in ['week', 'month']:
+            # 按天统计
+            days = {}
+            for v in query:
+                if v.exit_time:  # 确保exit_time不为None
+                    local_date = timezone.localtime(v.exit_time).strftime('%m-%d')
+                    days[local_date] = days.get(local_date, 0) + float(v.calculate_fee())
+            trend_data['labels'] = sorted(days.keys())
+            trend_data['amounts'] = [days[k] for k in trend_data['labels']]
+
+        elif period in ['quarter', 'year']:
+            # 按月统计
+            months = {}
+            for v in query:
+                if v.exit_time:  # 确保exit_time不为None
+                    local_month = timezone.localtime(v.exit_time).strftime('%Y-%m')
+                    months[local_month] = months.get(local_month, 0) + float(v.calculate_fee())
+            trend_data['labels'] = sorted(months.keys())
+            trend_data['amounts'] = [months[k] for k in trend_data['labels']]
+
+        # 返回JSON响应
+        return JsonResponse({
+            'success': True,
+            'stats': {
+                'total_income': sum(float(v.calculate_fee()) for v in query),
+                'avg_daily_income': sum(float(v.calculate_fee()) for v in query) / (7 if period == 'week' else 1),
+                'max_daily_income': max(trend_data['amounts']) if trend_data['amounts'] else 0,
+                'parking_count': query.count()
+            },
+            'trend': trend_data,
+            'records': records
         })
 
-    # 生成趋势数据
-    trend_data = {'labels': [], 'amounts': []}
-    if period == 'today':
-        # 按小时统计
-        hours = {h: 0.0 for h in range(24)}
-        for v in query:
-            local_hour = timezone.localtime(v.exit_time).hour
-            hours[local_hour] += float(v.calculate_fee())
-        trend_data['labels'] = [f"{h:02d}:00" for h in range(24)]
-        trend_data['amounts'] = list(hours.values())
-    elif period in ['week', 'month']:
-        # 按天统计
-        days = {}
-        for v in query:
-            local_date = timezone.localtime(v.exit_time).strftime('%m-%d')
-            days[local_date] = days.get(local_date, 0) + float(v.calculate_fee())
-        trend_data['labels'] = sorted(days.keys())
-        trend_data['amounts'] = [days[k] for k in trend_data['labels']]
-    elif period in ['quarter', 'year']:
-        # 按月统计
-        months = {}
-        for v in query:
-            local_month = timezone.localtime(v.exit_time).strftime('%Y-%m')
-            months[local_month] = months.get(local_month, 0) + float(v.calculate_fee())
-        trend_data['labels'] = sorted(months.keys())
-        trend_data['amounts'] = [months[k] for k in trend_data['labels']]
+    except Exception as e:
+        logger.error(f"Income data error: {str(e)}", exc_info=True)
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
-    # 返回JSON响应
-    return JsonResponse({
-        'success': True,
-        'stats': {
-            'total_income': sum(float(v.calculate_fee()) for v in query),
-            'avg_daily_income': sum(float(v.calculate_fee()) for v in query) / (7 if period == 'week' else 1),
-            'max_daily_income': max(trend_data['amounts']) if trend_data['amounts'] else 0,
-            'parking_count': query.count()
-        },
-        'trend': trend_data,
-        'records': records
-    })
 
 # 自定义JSON编码器，处理datetime对象
 class DateTimeEncoder(DjangoJSONEncoder):
@@ -175,6 +178,7 @@ class DateTimeEncoder(DjangoJSONEncoder):
             # 将datetime对象转换为ISO格式字符串
             return obj.isoformat()
         return super().default(obj)
+
 
 # 车辆数据API视图（仅限超级用户访问）
 @user_passes_test(lambda u: u.is_superuser)
@@ -229,6 +233,7 @@ def vehicle_data(request):
             "error": str(e)
         }, status=500)
 
+
 # 车辆类型映射
 VEHICLE_TYPE_MAPPING = {
     'car': '小型汽车',
@@ -239,6 +244,7 @@ VEHICLE_TYPE_MAPPING = {
 # 日志记录器
 logger = logging.getLogger(__name__)
 
+
 # 示例日志记录视图
 def my_view(request):
     logger.debug("This is a debug message.")
@@ -247,11 +253,13 @@ def my_view(request):
     logger.error("This is an error message.")
     logger.critical("This is a critical message.")
 
+
 # 普通车牌号的正则表达式
 STANDARD_PLATE_REGEX = r'^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-HJ-NP-Z][A-HJ-NP-Z0-9]{4,5}[A-HJ-NP-Z0-9挂学警港澳]$'
 
 # 新能源车牌号的正则表达式
 NEW_ENERGY_PLATE_REGEX = r'^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-HJ-NP-Z](?:[A-HJ-NP-Z0-9]{4}|[D-F][A-HJ-NP-Z0-9]{5})$'
+
 
 # 车牌号验证函数
 def is_license_plate_valid(license_plate):
@@ -268,6 +276,7 @@ def is_license_plate_valid(license_plate):
         return True
     return False
 
+
 # 车牌号验证API
 @csrf_exempt
 def validate_license_plate(request):
@@ -283,25 +292,31 @@ def validate_license_plate(request):
 
     return JsonResponse({"success": False, "message": "无效的请求方法"})
 
+
 # 首页视图
 def home(request):
     return render(request, "home.html")
+
 
 # 公司介绍视图
 def company_introduction(request):
     return render(request, "company_introduction.html")
 
+
 # 停车场概览视图
 def parking(request):
     return render(request, "parking.html")
+
 
 # 招商合作视图
 def business_cooperation(request):
     return render(request, "business_cooperation.html")
 
+
 # 联系我们视图
 def contact(request):
     return render(request, 'contact.html')
+
 
 # 提交联系表单视图
 def submit_contact_form(request):
@@ -323,11 +338,13 @@ def submit_contact_form(request):
         # 如果不是POST请求，重定向到联系页面
         return redirect('contact')
 
+
 # 招聘信息列表视图
 def join_us(request):
     # 获取所有职位
     jobs = JobPosition.objects.all()
     return render(request, 'join_us.html', {'jobs': jobs})
+
 
 # 职位详情视图
 def job_detail(request, job_id):
@@ -335,9 +352,11 @@ def job_detail(request, job_id):
     job = get_object_or_404(JobPosition, id=job_id)
     return render(request, 'job_detail.html', {'job': job})
 
+
 # 联系我们视图(备用)
 def contact_us(request):
-    return render(request, 'contact-us.html')  
+    return render(request, 'contact-us.html')
+
 
 # 停车记录视图
 def vehicle_history(request):
@@ -348,6 +367,7 @@ def vehicle_history(request):
         # 普通用户查看自己的停车记录
         vehicles = Vehicle.objects.filter(user=request.user)
     return render(request, "vehicle_history.html", {"vehicles": vehicles})
+
 
 # 停车管理系统主视图
 @login_required(login_url='/login/')
@@ -406,6 +426,7 @@ def parking_lot(request):
         "spots": spots,
         "active_promotion": active_promotion  # 传递促销活动信息
     })
+
 
 # 停车数据API
 @login_required
@@ -473,9 +494,11 @@ def parking_lot_data(request):
 
     return JsonResponse(response_data)
 
+
 # 帮助中心视图
 def help(request):
     return render(request, "help.html")
+
 
 # 个人中心视图
 @login_required(login_url='/login/')
@@ -510,6 +533,7 @@ def we(request):
         'current_time': current_time,
     })
 
+
 # 登录页面视图
 def login_home(request):
     # 检查用户是否已登录
@@ -517,12 +541,14 @@ def login_home(request):
         return redirect('we')  # 如果已登录，跳转到个人中心
     return render(request, "login.html")
 
+
 # 注册页面视图
 def register(request):
     # 检查用户是否已登录
     if request.user.is_authenticated:
         return redirect('we')  # 如果已登录，跳转到个人中心
     return render(request, "register.html")
+
 
 # 登录处理视图
 def login_v(request):
@@ -570,6 +596,7 @@ def login_v(request):
 
     return render(request, 'login.html')
 
+
 # 注册处理视图
 def register_v(request):
     # 检查用户是否已登录
@@ -611,6 +638,7 @@ def register_v(request):
 
     return render(request, 'register.html', {'form': form})
 
+
 # 会员购买视图
 @login_required
 def buy_membership(request):
@@ -644,6 +672,7 @@ def buy_membership(request):
 
     return render(request, 'buy_membership.html')
 
+
 # 编辑资料视图类
 class EditProfileView(LoginRequiredMixin, UpdateView):
     model = User
@@ -655,10 +684,12 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         # 获取当前登录用户
         return self.request.user
 
+
 # 修改密码视图类
 class ChangePasswordView(PasswordChangeView):
     template_name = 'change_password.html'  # 模板路径
     success_url = reverse_lazy('we')  # 成功后跳转到个人中心
+
 
 # 退出登录视图
 def logout_view(request):
@@ -666,12 +697,14 @@ def logout_view(request):
     messages.success(request, '您已成功退出登录！')
     return redirect('home')
 
+
 # 管理员仪表盘视图
 @staff_member_required  # 仅限管理员访问
 def admin_dashboard(request):
     # 获取最近的10条车辆记录
     vehicles = Vehicle.objects.all().order_by('-entry_time')[:10]
     return render(request, 'admin/index.html', {'vehicles': vehicles})
+
 
 # 车辆入场API
 @csrf_exempt
@@ -724,6 +757,7 @@ def entry(request):
             return JsonResponse({"success": False, "message": f"发生错误：{str(e)}"})
 
     return JsonResponse({"success": False, "message": "无效的请求方法"})
+
 
 # 预订车位API
 @csrf_exempt
@@ -798,6 +832,7 @@ def use_reservation(request, vehicle_id):
             return JsonResponse({"success": False, "message": "车辆不存在"})
     return JsonResponse({"success": False, "message": "无效请求"})
 
+
 # 取消预订API
 @login_required(login_url='/login/')
 @csrf_exempt
@@ -818,6 +853,7 @@ def cancel_reservation(request, vehicle_id):
         except Vehicle.DoesNotExist:
             return JsonResponse({"success": False, "message": "车辆不存在"})
     return JsonResponse({"success": False, "message": "无效的请求方法"})
+
 
 # 车辆出场视图
 csrf_protect
