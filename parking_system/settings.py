@@ -44,9 +44,25 @@ SECRET_KEY = 'django-insecure-wkpt+^8m^2p&u5z(wjw80rm+d$&)je(i$v-mdm%!5in+1k%ds=
 DEBUG = True
 
 # Application definition
+JAZZMIN_SETTINGS = {
+    # 浏览器标签页图标（favicon）
+    "site_icon": "img/favicon.ico",  # 路径相对于 static 目录
 
+    # 登录页和后台顶部 logo
+    "site_logo": "img/logoo.png",  # 路径相对于 static 目录
+    "custom_css": "css/admin/admin_custom.css",
+    # 其他可选配置
+    "topmenu_links": [
+        # 自定义顶部菜单（可选）
+        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
+    ],
+    "site_title": "智能停车管理系统",
+    "site_header": "凉心科技控制台",
+    "theme": "dark",  # 科技感深色模式
+    "navigation_expanded": False,  # 解决菜单错乱
+}
 INSTALLED_APPS = [
-
+    'jazzmin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -61,7 +77,6 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -79,7 +94,9 @@ ROOT_URLCONF = 'parking_system.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'html')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates').replace('\\', '/'),
+                 os.path.join(BASE_DIR, 'html'),],
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -189,3 +206,4 @@ LOGGING = {
         },
     },
 }
+

@@ -2,6 +2,8 @@ from django.urls import include, path
 from django.urls import path
 from django.views.generic import TemplateView
 from parking_app import views
+from django.conf import settings
+from django.conf.urls.static import static
 #社区版就是有这个报错，可以忽略
 from .views import ChangePasswordView, admin_dashboard, exit_vehicle, vehicle_history, buy_membership
 # vehicle_entry  # 使用相对导入修改密码视图

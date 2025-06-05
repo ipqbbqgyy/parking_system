@@ -1,29 +1,19 @@
+{# 强制覆盖模板 #}
 {% extends "admin/login.html" %}
+{% load static %}
 
 {% block branding %}
-<div id="header" class="custom-header">
-    <h1>凉心科技有限公司后台管理系统</h1>
+<div style="text-align: center; margin: 30px 0;">
+    <svg width="80" height="80" viewBox="0 0 24 24" style="margin-bottom: 15px;">
+        <path fill="#4CAF50" d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.08 3.11H5.77L6.85 7zM19 17H5v-5h14v5z"/>
+    </svg>
+    <h1 style="color: #2c3e50; font-family: 'Microsoft YaHei'">凉心科技智能停车系统</h1>
 </div>
 {% endblock %}
 
-{% block extrastyle %}
-<link rel="stylesheet" type="text/css" href="/static/css/admin/login.css">
-<style>
-    .custom-header {
-        display: flex !important;
-        justify-content: center !important;
-        width: 100% !important;
-        padding: 20px 0 !important;
-        background: #2c3e50 !important;
-        margin: -30px -30px 30px -30px !important;
-    }
-
-    .custom-header h1 {
-        color: white !important;
-        font-size: 24px !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        float: none !important;
-    }
-</style>
+{% block content %}
+<div style="background: white; padding: 20px; border-radius: 8px; width: 400px; margin: 0 auto;">
+    <h2 style="text-align: center; color: #333; margin-bottom: 20px;">管理员登录</h2>
+    {{ block.super }}  {# 保留原始登录表单 #}
+</div>
 {% endblock %}

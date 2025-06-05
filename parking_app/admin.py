@@ -25,7 +25,7 @@ class CustomAdminSite(admin.AdminSite):
     login_template = 'admin/login.html'
     index_template = 'admin/index.html'
     base_template = 'admin/base.html'
-
+    logout_template = 'admin/logout.html'
     def has_permission(self, request):
         return request.user.is_active and (request.user.is_staff or request.user.is_superuser)
 

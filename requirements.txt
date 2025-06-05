@@ -1,9 +1,10 @@
-# 使用清华镜像源安装依赖（自动生效）
--i https://pypi.tuna.tsinghua.edu.cn/simple
+# requirements.txt
+# 使用清华镜像源安装依赖
+--index-url https://pypi.tuna.tsinghua.edu.cn/simple
 --trusted-host pypi.tuna.tsinghua.edu.cn
 
 # 核心依赖
-# requirements.txt
 Django==4.2.5
 pymysql==1.1.0
 cryptography
+django-jazzmin  # 添加这一行
