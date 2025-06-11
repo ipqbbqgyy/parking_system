@@ -896,17 +896,21 @@ def exit_vehicle(request, vehicle_id):
 
 
 # 支付处理API
+# views.py
 @csrf_protect
 def payment(request, vehicle_id):
-    if request.method == 'POST':
-        try:
-            # 获取车辆记录
-            vehicle = Vehicle.objects.get(id=vehicle_id)
-            # 更新出场时间和支付状态
-            vehicle.exit_time = timezone.now()
-            vehicle.paid = True
-            vehicle.save()
-            return JsonResponse({"success": True, "message": "支付成功"})
-        except Vehicle.DoesNotExist:
-            return JsonResponse({"success": False, "message": "车辆信息不存在"})
-    return JsonResponse({"success": False, "message": "无效的请求方法"})
+    try:
+        vehicle = Vehicle.objects.get(id=vehicle_id)
+        vehicle.exit_time = timezone.now()  # 必须设置出库时间
+        vehicle.paid = True
+        vehicle.payment_amount = vehicle.calculate_fee()  # 确保计算并保存实际费用
+        vehicle.save()
+
+        # 打印日志确认更新
+        print(f"支付成功 - 车辆ID: {vehicle_id}, 车牌: {vehicle.license_plate}, 金额: {vehicle.payment_amount}")
+
+        return JsonResponse({"success": True, "amount": float(vehicle.payment_amount)})
+    except Exception as e:
+        logger.error(f"支付失败: {str(e)}")
+        return JsonResponse({"success": False, "error": str(e)})
+
