@@ -53,9 +53,9 @@ function initChatBot() {
         },
         auth: {
             type: 'token',
-            token: 'pat_HUabzY30g5UkSMfHNQsdLLZF3EQw1PEwmpK7POWZXHwDQNSkeLtTmo0GmZ1C4r2r',
+            token: '扣子的人工客服apl',
             onRefreshToken: function() {
-                return 'pat_HUabzY30g5UkSMfHNQsdLLZF3EQw1PEwmpK7POWZXHwDQNSkeLtTmo0GmZ1C4r2r';
+                return '扣子的人工客服apl';
             }
         },
         onReady: function() {
@@ -75,4 +75,5 @@ function initChatBot() {
         }
         chatClient.isOpen() ? chatClient.close() : chatClient.open();
     });
+
 }
