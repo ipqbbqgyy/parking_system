@@ -6,7 +6,11 @@
 项目描述：独立全栈开发的B/S架构停车场管理系统，实现车辆入场、计费、支付、出场全流程数字化管理。
 
 技术栈：Python / Django / MySQL / Linux / Nginx / uWSGI
+
+
 <img width="1280" height="764" alt="image" src="https://github.com/user-attachments/assets/cafc87cc-421e-41f4-9e1b-c1412a6883cf" />
+<img width="1280" height="764" alt="image" src="https://github.com/user-attachments/assets/aecc1c48-07f5-48e9-8709-0016a11272c1" />
+
 <img width="1280" height="764" alt="image" src="https://github.com/user-attachments/assets/bb9d9bef-34d6-456d-b5a6-1a914bc75ee2" />
 
 
